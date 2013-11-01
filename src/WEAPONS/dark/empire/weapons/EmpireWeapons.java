@@ -21,6 +21,8 @@ import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.ModPrefab;
+import dark.core.registration.ModObjectRegistry;
+import dark.empire.weapons.items.ItemProjectileWeapon;
 import dark.empire.weapons.items.ProjectileWeaponManager;
 
 @Mod(modid = EmpireWeapons.MOD_ID, name = EmpireWeapons.MOD_NAME, version = EmpireWeapons.VERSION, dependencies = "after:EmpireEngine", useMetadata = true)
@@ -113,7 +115,8 @@ public class EmpireWeapons extends ModPrefab
     @Override
     public void registerObjects()
     {
-        // TODO Auto-generated method stub
+        EWRecipeLoader.instance();
+        EWRecipeLoader.itemGun = ModObjectRegistry.createNewItem("EWItemGun", MOD_ID, ItemProjectileWeapon.class, true);
 
     }
 

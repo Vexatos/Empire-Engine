@@ -9,7 +9,7 @@ import dark.empire.weapons.EmpireWeapons;
 public class ItemClip extends ItemBasic
 {
 
-    public ItemClip(int itemID, String name, Configuration config)
+    public ItemClip()
     {
         super(EmpireWeapons.getNextItemId(), "EWAmmoClip", EmpireWeapons.CONFIGURATION);
     }

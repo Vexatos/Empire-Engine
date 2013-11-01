@@ -10,7 +10,7 @@ import dark.empire.weapons.EmpireWeapons;
 public class ItemBullet extends ItemBasic
 {
 
-    public ItemBullet(int itemID, String name, Configuration config)
+    public ItemBullet()
     {
         super(EmpireWeapons.getNextItemId(), "EWItemBullet", EmpireWeapons.CONFIGURATION);
         this.setHasSubtypes(true);
