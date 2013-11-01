@@ -87,12 +87,16 @@ public class ItemProjectileWeapon extends ItemBasic
         {
             for (int i = 0; i < 30; i++)
             {
-                float par1 = (float) (entityLiving.worldObj.rand.nextFloat() * (entityLiving.worldObj.rand.nextBoolean() ? -50 : 50));
-                float par3 = (float) (entityLiving.worldObj.rand.nextFloat() * (entityLiving.worldObj.rand.nextBoolean() ? -50 : 50));
-                float par5 = (float) (entityLiving.worldObj.rand.nextFloat() * (entityLiving.worldObj.rand.nextBoolean() ? -50 : 50));
+                float damage = 10;
+                float accuraceLose = .045f;
+                float range = 300;
+                float delta = range * accuraceLose;
+                float par1 = (float) (entityLiving.worldObj.rand.nextFloat() * (entityLiving.worldObj.rand.nextBoolean() ? -delta : delta));
+                float par3 = (float) (entityLiving.worldObj.rand.nextFloat() * (entityLiving.worldObj.rand.nextBoolean() ? -delta : delta));
+                float par5 = (float) (entityLiving.worldObj.rand.nextFloat() * (entityLiving.worldObj.rand.nextBoolean() ? -delta : delta));
                 Vec3 e = new Vector3(par1, par3, par5).toVec3();
-                MovingObjectPosition hitMOP = ProjectileWeaponManager.ray_trace_do(entityLiving.worldObj, entityLiving, e, 500, true);
-                entityLiving.worldObj.playSoundAtEntity(entityLiving, "random.bow", 0.5F, 0.4F / ((float) Math.random() * 0.4F + 0.8F));
+                MovingObjectPosition hitMOP = ProjectileWeaponManager.ray_trace_do(entityLiving.worldObj, entityLiving, e, range, true);
+                entityLiving.worldObj.playSound(entityLiving.posX, entityLiving.posY, entityLiving.posZ, EmpireWeapons.instance.PREFIX + "shotgun2", 0.5f, 0.7f, true);
                 Vec3 lookVec = entityLiving.getLookVec();
                 if (hitMOP != null)
                 {
@@ -100,9 +104,9 @@ public class ItemProjectileWeapon extends ItemBasic
                     {
                         drawParticleStreamTo(entityLiving, entityLiving.worldObj, hitMOP.hitVec.xCoord, hitMOP.hitVec.yCoord, hitMOP.hitVec.zCoord);
                         DamageSource damageSource = DamageSource.causePlayerDamage((EntityPlayer) entityLiving);
-                        if (hitMOP.entityHit.attackEntityFrom(damageSource, 5))
+                        if (hitMOP.entityHit.attackEntityFrom(damageSource, damage))
                         {
-                            hitMOP.entityHit.addVelocity(lookVec.xCoord * 1.2, 0, lookVec.zCoord * 1.2);
+                            hitMOP.entityHit.addVelocity(lookVec.xCoord * 0.2, 0, lookVec.zCoord * 0.2);
                         }
                     }
                     drawParticleStreamTo(entityLiving, entityLiving.worldObj, hitMOP.hitVec.xCoord, hitMOP.hitVec.yCoord, hitMOP.hitVec.zCoord);

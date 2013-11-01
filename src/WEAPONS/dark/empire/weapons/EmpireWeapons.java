@@ -71,6 +71,7 @@ public class EmpireWeapons extends ModPrefab
     {
         EmpireWeapons.getInstance();
         super.preInit(event);
+        proxy.preInit();
     }
 
     @EventHandler
@@ -87,6 +88,7 @@ public class EmpireWeapons extends ModPrefab
     public void postInit(FMLPostInitializationEvent event)
     {
         super.postInit(event);
+        proxy.postInit();
     }
 
     @Override
