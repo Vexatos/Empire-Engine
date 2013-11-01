@@ -2,6 +2,8 @@ package dark.empire.weapons.items;
 
 import java.util.List;
 
+import universalelectricity.core.vector.Vector3;
+
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.Entity;
@@ -83,21 +85,28 @@ public class ItemProjectileWeapon extends ItemBasic
     {
         if (entityLiving instanceof EntityPlayer)
         {
-            MovingObjectPosition hitMOP = ProjectileWeaponManager.ray_trace_do(entityLiving.worldObj, entityLiving, 500, true);
-            entityLiving.worldObj.playSoundAtEntity(entityLiving, "random.bow", 0.5F, 0.4F / ((float) Math.random() * 0.4F + 0.8F));
-            Vec3 lookVec = entityLiving.getLookVec();
-            if (hitMOP != null)
+            for (int i = 0; i < 30; i++)
             {
-                if (hitMOP.entityHit != null)
+                float par1 = (float) (entityLiving.worldObj.rand.nextFloat() * (entityLiving.worldObj.rand.nextBoolean() ? -50 : 50));
+                float par3 = (float) (entityLiving.worldObj.rand.nextFloat() * (entityLiving.worldObj.rand.nextBoolean() ? -50 : 50));
+                float par5 = (float) (entityLiving.worldObj.rand.nextFloat() * (entityLiving.worldObj.rand.nextBoolean() ? -50 : 50));
+                Vec3 e = new Vector3(par1, par3, par5).toVec3();
+                MovingObjectPosition hitMOP = ProjectileWeaponManager.ray_trace_do(entityLiving.worldObj, entityLiving, e, 500, true);
+                entityLiving.worldObj.playSoundAtEntity(entityLiving, "random.bow", 0.5F, 0.4F / ((float) Math.random() * 0.4F + 0.8F));
+                Vec3 lookVec = entityLiving.getLookVec();
+                if (hitMOP != null)
                 {
-                    drawParticleStreamTo(entityLiving, entityLiving.worldObj, hitMOP.hitVec.xCoord, hitMOP.hitVec.yCoord, hitMOP.hitVec.zCoord);
-                    DamageSource damageSource = DamageSource.causePlayerDamage((EntityPlayer) entityLiving);
-                    if (hitMOP.entityHit.attackEntityFrom(damageSource, 5))
+                    if (hitMOP.entityHit != null)
                     {
-                        hitMOP.entityHit.addVelocity(lookVec.xCoord * 1.2, Math.abs(lookVec.yCoord + 0.2f) * 1.2, lookVec.zCoord * 1.2);
+                        drawParticleStreamTo(entityLiving, entityLiving.worldObj, hitMOP.hitVec.xCoord, hitMOP.hitVec.yCoord, hitMOP.hitVec.zCoord);
+                        DamageSource damageSource = DamageSource.causePlayerDamage((EntityPlayer) entityLiving);
+                        if (hitMOP.entityHit.attackEntityFrom(damageSource, 5))
+                        {
+                            hitMOP.entityHit.addVelocity(lookVec.xCoord * 1.2, 0, lookVec.zCoord * 1.2);
+                        }
                     }
+                    drawParticleStreamTo(entityLiving, entityLiving.worldObj, hitMOP.hitVec.xCoord, hitMOP.hitVec.yCoord, hitMOP.hitVec.zCoord);
                 }
-                drawParticleStreamTo(entityLiving, entityLiving.worldObj, hitMOP.hitVec.xCoord, hitMOP.hitVec.yCoord, hitMOP.hitVec.zCoord);
             }
             ((EntityPlayer) entityLiving).setItemInUse(stack, 10);
         }
