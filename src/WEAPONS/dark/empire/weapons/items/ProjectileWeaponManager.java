@@ -1,18 +1,19 @@
 package dark.empire.weapons.items;
 
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
-
-import cpw.mods.fml.common.ITickHandler;
-import cpw.mods.fml.common.TickType;
-
-import universalelectricity.core.vector.Vector3;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
+import universalelectricity.core.vector.Vector3;
+import cpw.mods.fml.common.ITickHandler;
+import cpw.mods.fml.common.TickType;
 
 /** Registers and manages weapons plus upgrades
  *
@@ -21,6 +22,7 @@ public class ProjectileWeaponManager implements ITickHandler
 {
     private static HashMap<String, WeaponUpgrade> weaponUpgrades = new HashMap();
     private static HashMap<String, ProjectileWeapon> weapons = new HashMap();
+    private static List<BulletRay> firedBullets = new ArrayList();
 
     /** @param name - not the weapon name but the name used to id it
      * @param weapon - instance of the weapon */
@@ -78,21 +80,11 @@ public class ProjectileWeaponManager implements ITickHandler
         return id;
     }
 
-    public static boolean fireWeapon(ProjectileWeapon weapon, Entity entity)
+    public static boolean fireWeapon(ProjectileWeapon weapon, Bullet bullet, Entity entity)
     {
         if (entity instanceof EntityPlayer && weapon != null)
         {
-            World world = entity.worldObj;
-            Vector3 start = new Vector3(entity);
-            Vector3 motion = new Vector3();
-            float yaw = entity.rotationYaw;
-            float pitch = entity.rotationPitch;
-            start.x -= (double)(MathHelper.cos(yaw / 180.0F * (float)Math.PI) * 0.16F);
-            start.y -= 0.10000000149011612D + (double)entity.getEyeHeight();
-            start.z -= (double)(MathHelper.sin(yaw / 180.0F * (float)Math.PI) * 0.16F);
-            motion.x = (double)(-MathHelper.sin(yaw / 180.0F * (float)Math.PI) * MathHelper.cos(pitch / 180.0F * (float)Math.PI));
-            motion.z = (double)(MathHelper.cos(yaw / 180.0F * (float)Math.PI) * MathHelper.cos(pitch / 180.0F * (float)Math.PI));
-            motion.y = (double)(-MathHelper.sin(yaw / 180.0F * (float)Math.PI));
+            firedBullets.add(new BulletRay(entity, weapon, bullet));
         }
         return false;
     }
@@ -100,8 +92,20 @@ public class ProjectileWeaponManager implements ITickHandler
     @Override
     public void tickStart(EnumSet<TickType> type, Object... tickData)
     {
-        // TODO Auto-generated method stub
-
+        Iterator<BulletRay> it = firedBullets.iterator();
+        while (it.hasNext())
+        {
+            BulletRay ray = it.next();
+            ray.update();
+            if (ray.dead)
+            {
+                it.remove();
+            }
+            else if (ray.ticks >= 1000)
+            {
+                it.remove();
+            }
+        }
     }
 
     @Override
@@ -121,10 +125,5 @@ public class ProjectileWeaponManager implements ITickHandler
     public String getLabel()
     {
         return "WeaponUpdateTick";
-    }
-
-    public static class BulletRay
-    {
-
     }
 }

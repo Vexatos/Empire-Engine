@@ -60,8 +60,9 @@ public class ItemProjectileWeapon extends ItemBasic
     }
 
     @Override
-    public boolean onItemUse(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, World par3World, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
+    public boolean onItemUse(ItemStack itemStack, EntityPlayer entityPlayer, World world, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
     {
+
         return false;
     }
 
@@ -74,6 +75,10 @@ public class ItemProjectileWeapon extends ItemBasic
     @Override
     public boolean onEntitySwing(EntityLivingBase entityLiving, ItemStack stack)
     {
+        if (entityLiving != null && !entityLiving.worldObj.isRemote)
+        {
+            ProjectileWeaponManager.fireWeapon(new ProjectileWeapon("Gun", ProjectileWeaponTypes.HANDGUN, 3),Bullet.NINE_MM, entityLiving);
+        }
         return true;
     }
 
