@@ -41,8 +41,8 @@ public class EmpireWeapons extends ModPrefab
     public static final String MOD_ID = "EmpireEngine:Weapons";
     public static final String MOD_NAME = "Empire Engine Weapons";
 
-    @SidedProxy(clientSide = "dark.empire.core.ClientProxy", serverSide = "dark.empire.core.CommonProxy")
-    public static CommonProxy proxy;
+    @SidedProxy(clientSide = "dark.empire.weapons.client.EWClientProxy", serverSide = "dark.empire.weapons.EWCommonProxy")
+    public static EWCommonProxy proxy;
 
     public static final String CHANNEL = "EmpireEngine";
 
@@ -70,7 +70,6 @@ public class EmpireWeapons extends ModPrefab
     public void preInit(FMLPreInitializationEvent event)
     {
         EmpireWeapons.getInstance();
-        TickRegistry.registerTickHandler(new ProjectileWeaponManager(), Side.SERVER);
         super.preInit(event);
     }
 

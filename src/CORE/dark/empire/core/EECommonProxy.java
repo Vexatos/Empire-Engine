@@ -1,10 +1,10 @@
-package dark.empire.weapons;
+package dark.empire.core;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.network.IGuiHandler;
 
-public class CommonProxy implements IGuiHandler
+public class EECommonProxy implements IGuiHandler
 {
     public static final int MANAGER_GUI = 0;
 

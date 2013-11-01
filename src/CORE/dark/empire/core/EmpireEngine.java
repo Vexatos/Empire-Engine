@@ -36,8 +36,8 @@ public class EmpireEngine extends ModPrefab
     public static final String MOD_ID = "EmpireEngine";
     public static final String MOD_NAME = "Empire Engine";
 
-    @SidedProxy(clientSide = "dark.empire.core.ClientProxy", serverSide = "dark.empire.core.CommonProxy")
-    public static CommonProxy proxy;
+    @SidedProxy(clientSide = "dark.empire.core.client.EEClientProxy", serverSide = "dark.empire.core.EECommonProxy")
+    public static EECommonProxy proxy;
 
     public static final String CHANNEL = "EmpireEngine";
 

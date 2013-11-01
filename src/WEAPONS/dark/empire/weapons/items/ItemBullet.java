@@ -1,5 +1,6 @@
 package dark.empire.weapons.items;
 
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraftforge.common.Configuration;
 import dark.core.prefab.items.ItemBasic;
 import dark.empire.weapons.EmpireWeapons;
@@ -14,6 +15,7 @@ public class ItemBullet extends ItemBasic
     {
         super(EmpireWeapons.getNextItemId(), "EWItemBullet", EmpireWeapons.CONFIGURATION);
         this.setHasSubtypes(true);
+        this.setCreativeTab(CreativeTabs.tabCombat);
     }
 
     public static enum BulletData

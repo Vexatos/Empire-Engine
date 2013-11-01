@@ -1,5 +1,6 @@
 package dark.empire.weapons.items;
 
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraftforge.common.Configuration;
@@ -12,6 +13,7 @@ public class ItemClip extends ItemBasic
     public ItemClip()
     {
         super(EmpireWeapons.getNextItemId(), "EWAmmoClip", EmpireWeapons.CONFIGURATION);
+        this.setCreativeTab(CreativeTabs.tabCombat);
     }
 
     public boolean hasBullets(ItemStack stack)

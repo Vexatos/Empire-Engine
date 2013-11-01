@@ -9,20 +9,21 @@ import java.util.Map.Entry;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.MathHelper;
+import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.ChatMessageComponent;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.common.ITickHandler;
 import cpw.mods.fml.common.TickType;
 
 /** Registers and manages weapons plus upgrades
  *
  * @author DarkGuardsman */
-public class ProjectileWeaponManager implements ITickHandler
+public class ProjectileWeaponManager
 {
     private static HashMap<String, WeaponUpgrade> weaponUpgrades = new HashMap();
     private static HashMap<String, ProjectileWeapon> weapons = new HashMap();
-    private static List<BulletRay> firedBullets = new ArrayList();
 
     /** @param name - not the weapon name but the name used to id it
      * @param weapon - instance of the weapon */
@@ -80,50 +81,96 @@ public class ProjectileWeaponManager implements ITickHandler
         return id;
     }
 
-    public static boolean fireWeapon(ProjectileWeapon weapon, Bullet bullet, Entity entity)
+    public static MovingObjectPosition raytraceEntities(World world, Entity entity, double reachDistance, boolean collisionFlag)
     {
-        if (entity instanceof EntityPlayer && weapon != null)
+
+        MovingObjectPosition pickedEntity = null;
+        Vec3 playerPosition = Vec3.createVectorHelper(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ);
+        Vec3 playerLook = entity.getLookVec();
+
+        Vec3 playerViewOffset = Vec3.createVectorHelper(playerPosition.xCoord + playerLook.xCoord * reachDistance, playerPosition.yCoord + playerLook.yCoord * reachDistance, playerPosition.zCoord + playerLook.zCoord * reachDistance);
+
+        double playerBorder = 1.1 * reachDistance;
+        AxisAlignedBB boxToScan = entity.boundingBox.expand(playerBorder, playerBorder, playerBorder);
+
+        List entitiesHit = world.getEntitiesWithinAABBExcludingEntity(entity, boxToScan);
+        double closestEntity = reachDistance;
+
+        if (entitiesHit == null || entitiesHit.isEmpty())
         {
-            firedBullets.add(new BulletRay(entity, weapon, bullet));
+            return null;
         }
-        return false;
-    }
-
-    @Override
-    public void tickStart(EnumSet<TickType> type, Object... tickData)
-    {
-        Iterator<BulletRay> it = firedBullets.iterator();
-        while (it.hasNext())
+        for (Entity entityHit : (Iterable<Entity>) entitiesHit)
         {
-            BulletRay ray = it.next();
-            ray.update();
-            if (ray.dead)
+            if (entityHit != null && entityHit.canBeCollidedWith() && entityHit.boundingBox != null)
             {
-                it.remove();
-            }
-            else if (ray.ticks >= 1000)
-            {
-                it.remove();
+                float border = entityHit.getCollisionBorderSize();
+                AxisAlignedBB aabb = entityHit.boundingBox.expand((double) border, (double) border, (double) border);
+                MovingObjectPosition hitMOP = aabb.calculateIntercept(playerPosition, playerViewOffset);
+
+                if (hitMOP != null)
+                {
+                    if (aabb.isVecInside(playerPosition))
+                    {
+                        if (0.0D < closestEntity || closestEntity == 0.0D)
+                        {
+                            pickedEntity = new MovingObjectPosition(entityHit);
+                            if (pickedEntity != null)
+                            {
+                                pickedEntity.hitVec = hitMOP.hitVec;
+                                closestEntity = 0.0D;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        double distance = playerPosition.distanceTo(hitMOP.hitVec);
+
+                        if (distance < closestEntity || closestEntity == 0.0D)
+                        {
+                            pickedEntity = new MovingObjectPosition(entityHit);
+                            pickedEntity.hitVec = hitMOP.hitVec;
+                            closestEntity = distance;
+                        }
+                    }
+                }
             }
         }
+        return pickedEntity;
     }
 
-    @Override
-    public void tickEnd(EnumSet<TickType> type, Object... tickData)
+    public static MovingObjectPosition raytraceBlocks(World world, Entity entity, double reachDistance, boolean collisionFlag)
     {
-        // TODO Auto-generated method stub
+        Vec3 playerPosition = Vec3.createVectorHelper(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ);
+        Vec3 playerLook = entity.getLookVec();
 
+        Vec3 playerViewOffset = Vec3.createVectorHelper(playerPosition.xCoord + playerLook.xCoord * reachDistance, playerPosition.yCoord + playerLook.yCoord * reachDistance, playerPosition.zCoord + playerLook.zCoord * reachDistance);
+        return world.rayTraceBlocks_do_do(playerPosition, playerViewOffset, collisionFlag, !collisionFlag);
     }
 
-    @Override
-    public EnumSet<TickType> ticks()
+    public static MovingObjectPosition ray_trace_do(World world, Entity entity, double reachDistance, boolean collisionFlag)
     {
-        return EnumSet.of(TickType.SERVER);
-    }
-
-    @Override
-    public String getLabel()
-    {
-        return "WeaponUpdateTick";
+        MovingObjectPosition hitBlock = raytraceBlocks(world, entity, reachDistance, collisionFlag);
+        MovingObjectPosition hitEntity = raytraceEntities(world, entity, reachDistance, collisionFlag);
+        if (hitEntity == null)
+        {
+            return hitBlock;
+        }
+        else if (hitBlock == null)
+        {
+            return hitEntity;
+        }
+        else
+        {
+            Vec3 playerPosition = Vec3.createVectorHelper(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ);
+            if (hitEntity.hitVec.distanceTo(playerPosition) <  hitBlock.hitVec.distanceTo(playerPosition))
+            {
+                return hitEntity;
+            }
+            else
+            {
+                return hitBlock;
+            }
+        }
     }
 }

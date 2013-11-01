@@ -1,10 +1,11 @@
-package dark.empire.weapons.client;
+package dark.empire.core.client;
 
+import dark.empire.core.EECommonProxy;
+import dark.empire.weapons.EWCommonProxy;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
-import dark.empire.core.CommonProxy;
 
-public class ClientProxy extends CommonProxy
+public class EEClientProxy extends EECommonProxy
 {
     public void preInit()
     {
