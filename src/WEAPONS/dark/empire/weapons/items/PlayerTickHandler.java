@@ -45,7 +45,7 @@ public class PlayerTickHandler implements ITickHandler
                 EntityPlayer player = (EntityPlayer) tickData[0];
 
                 ItemStack currentItem = player.getCurrentEquippedItem();
-                if (currentItem.itemID == EWRecipeLoader.itemGun.itemID)
+                if (currentItem != null && currentItem.itemID == EWRecipeLoader.itemGun.itemID)
                 {
                     if (currentItem != null && (player != Minecraft.getMinecraft().renderViewEntity || Minecraft.getMinecraft().gameSettings.thirdPersonView != 0))
                     {

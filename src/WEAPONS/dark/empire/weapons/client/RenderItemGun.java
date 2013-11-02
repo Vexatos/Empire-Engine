@@ -48,7 +48,6 @@ public class RenderItemGun implements IItemRenderer
                 break;
             case PumpShotGun:
             case DBShotGun:
-            case Sniper:
             default:
                 FMLClientHandler.instance().getClient().renderEngine.bindTexture(TEXTURE_NONE);
                 break;
@@ -90,7 +89,6 @@ public class RenderItemGun implements IItemRenderer
                 }
                 DBSHOTGUN.render(0.0625F);
                 break;
-            case Sniper:
             default:
         }
 

@@ -22,6 +22,7 @@ import cpw.mods.fml.relauncher.Side;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.ModPrefab;
 import dark.core.registration.ModObjectRegistry;
+import dark.empire.weapons.items.ItemBullet;
 import dark.empire.weapons.items.ItemProjectileWeapon;
 import dark.empire.weapons.items.ProjectileWeaponManager;
 import dark.empire.weapons.items.PlayerTickHandler;
@@ -119,6 +120,7 @@ public class EmpireWeapons extends ModPrefab
     {
         EWRecipeLoader.instance();
         EWRecipeLoader.itemGun = ModObjectRegistry.createNewItem("EWItemGun", MOD_ID, ItemProjectileWeapon.class, true);
+        EWRecipeLoader.itemBullet = ModObjectRegistry.createNewItem("EWItemBullet", MOD_ID, ItemBullet.class, true);
 
     }
 

@@ -5,6 +5,8 @@ import java.util.List;
 import net.minecraft.block.Block;
 import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
@@ -16,10 +18,15 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
+
+import com.builtbroken.common.Pair;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.client.Effects;
+import dark.core.prefab.helpers.ItemWorldHelper;
 import dark.core.prefab.items.ItemBasic;
+import dark.empire.api.weapons.IBullet;
 import dark.empire.weapons.EmpireWeapons;
 
 /** Basic Projectile weapon class that stores all the attributes of the weapon as NBT
@@ -145,11 +152,31 @@ public class ItemProjectileWeapon extends ItemBasic
         //TODO check for close range swing to do melee damage rather than fire the gun.. Or have alt fire for melee attacks
         if (entityLiving instanceof EntityPlayer)
         {
+            boolean dontConsumeAmmo = ((EntityPlayer) entityLiving).capabilities.isCreativeMode || EnchantmentHelper.getEnchantmentLevel(Enchantment.infinity.effectId, stack) > 0;
+
             ProjectileWeapon weapon = Guns.get(stack.getItemDamage()).weapon;
-            Bullet bullet = Bullet.NINE_MM;
-            if (weapon != null && !weapon.onFired(entityLiving, bullet))
+            Pair<Integer, ItemStack> bullet_item = this.getBullet(((EntityPlayer) entityLiving), weapon.type);
+            Bullet bullet = Bullet.TEN_MM;
+            ItemStack shell = null;
+            System.out.println("Gun Fired");
+            if (bullet_item != null && bullet_item.right() != null && bullet_item.right().getItem() instanceof IBullet)
             {
-                for (int i = 0; i < weapon.shotsPerClick; i++)
+                System.out.println("Has Bullet");
+                bullet = ((IBullet) bullet_item.right().getItem()).getBullet(bullet_item.right());
+                shell = ((IBullet) bullet_item.right().getItem()).getShell(bullet_item.right());
+            }
+            if (weapon != null && (dontConsumeAmmo || bullet_item != null) && !weapon.onFired(entityLiving, bullet))
+            {
+                if (bullet_item != null && !dontConsumeAmmo)
+                {
+                    if (shell != null)
+                    {
+                        ItemWorldHelper.dropItemStack(entityLiving.worldObj, new Vector3(entityLiving), shell, true);
+                    }
+                    ((EntityPlayer) entityLiving).inventory.decrStackSize(bullet_item.left(), 1);
+
+                }
+                for (int i = 0; i < bullet.rounds; i++)
                 {
                     float damage = weapon.getDamage(entityLiving.worldObj.rand) + bullet.getDamage(entityLiving.worldObj.rand);
                     float delta = weapon.range * weapon.fallOffPerMeter;
@@ -180,6 +207,27 @@ public class ItemProjectileWeapon extends ItemBasic
         return false;
     }
 
+    public Pair<Integer, ItemStack> getBullet(EntityPlayer player, AmmoType type)
+    {
+        for (int i = 0; i < player.inventory.getSizeInventory(); i++)
+        {
+            ItemStack inventoryStack = player.inventory.getStackInSlot(i);
+            System.out.println("Slot[" + i + "] Item: " + (inventoryStack != null ? inventoryStack.toString() : "null"));
+            if (inventoryStack != null && inventoryStack.getItem() instanceof IBullet)
+            {
+                boolean bullet = ((IBullet) inventoryStack.getItem()).getBullet(inventoryStack) != null;
+                int t = ((IBullet) inventoryStack.getItem()).getType(inventoryStack) != null ? ((IBullet) inventoryStack.getItem()).getType(inventoryStack).ordinal() : -1;
+                System.out.println("Is bullet: " + bullet + "   T:" + t);
+                if (((IBullet) inventoryStack.getItem()).getBullet(inventoryStack) != null && ((IBullet) inventoryStack.getItem()).getType(inventoryStack) == type)
+                {
+                    return new Pair<Integer, ItemStack>(i, inventoryStack);
+                }
+            }
+        }
+
+        return null;
+    }
+
     @Override
     public float getStrVsBlock(ItemStack par1ItemStack, Block par2Block)
     {
@@ -199,10 +247,9 @@ public class ItemProjectileWeapon extends ItemBasic
     /** Stores data about default meta value of the guns */
     public static enum Guns
     {
-        HandGun(new ProjectileWeapon("HandGun", ProjectileWeaponTypes.HANDGUN, 5, 40, 5, .01f).setMaxRange(500)),
-        DBShotGun(new ProjectileWeapon("DBShotGun", ProjectileWeaponTypes.SHOTGUN, 10, 31, 5, .05f).setShotsPerClick(8).setMaxRange(600)),
-        PumpShotGun(new ProjectileWeapon("PumpShotGun", ProjectileWeaponTypes.SHOTGUN, 10, 21, 25, .05f).setShotsPerClick(8).setMaxRange(300)),
-        Sniper(new ProjectileWeapon("Sniper", ProjectileWeaponTypes.RIFLE, 15, 60, 60, .01f).setMaxRange(500).setMaxRange(1500));
+        HandGun(new ProjectileWeapon("HandGun", AmmoType.SMALL, 5, 40, 5, .01f).setMaxRange(500)),
+        DBShotGun(new ProjectileWeapon("DBShotGun", AmmoType.SHOTGUN, 10, 31, 5, .05f).setMaxRange(600)),
+        PumpShotGun(new ProjectileWeapon("PumpShotGun", AmmoType.SHOTGUN, 10, 21, 25, .05f).setMaxRange(300));
         ProjectileWeapon weapon;
 
         private Guns(ProjectileWeapon weapon)

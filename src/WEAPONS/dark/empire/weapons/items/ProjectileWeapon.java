@@ -12,11 +12,10 @@ import cpw.mods.fml.common.FMLLog;
 public class ProjectileWeapon
 {
     protected String name = "gun";
-    protected ProjectileWeaponTypes type;
+    protected AmmoType type;
     protected float maxDamage = 1, minDamage = 1;
     protected float critChance = .05f, critMuliplier = 1.1f;//10% bonus damage
     protected float range = 300, fallOffPerMeter = .1f;
-    protected int shotsPerClick = 1;
     /** Time to reload the weapon per clip or shell if no clip */
     protected int reloadTicks = 20;
     /** Time before the next round */
@@ -24,7 +23,7 @@ public class ProjectileWeapon
     protected WeaponUpgrade[] upgrades;
     public Icon icon;
 
-    public ProjectileWeapon(String name, ProjectileWeaponTypes type, float damage, int reloadTime, int fireDelay, float fallOffPerMeter)
+    public ProjectileWeapon(String name, AmmoType type, float damage, int reloadTime, int fireDelay, float fallOffPerMeter)
     {
         this.name = name;
         this.maxDamage = damage;
@@ -33,12 +32,6 @@ public class ProjectileWeapon
         this.fireDelayTicks = fireDelay;
         this.fallOffPerMeter = fallOffPerMeter;
         this.upgrades = new WeaponUpgrade[WeaponUpgrade.WeaponUpgradeType.values().length];
-    }
-
-    public ProjectileWeapon setShotsPerClick(int shots)
-    {
-        this.shotsPerClick = shots;
-        return this;
     }
     public ProjectileWeapon setMaxRange(int range)
     {
@@ -127,7 +120,7 @@ public class ProjectileWeapon
         return this.name;
     }
 
-    public ProjectileWeaponTypes getType()
+    public AmmoType getType()
     {
         return this.type;
     }

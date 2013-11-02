@@ -21,14 +21,6 @@ public class ProjectileWeaponManager
     public static HashMap<String, WeaponUpgrade> weaponUpgrades = new HashMap();
     public static HashMap<String, ProjectileWeapon> weapons = new HashMap();
 
-    static
-    {
-        registerWeapon("EWPumpShotGun", new ProjectileWeapon("PumpShotGun", ProjectileWeaponTypes.SHOTGUN, 10, 21, 25, .3f).setShotsPerClick(8));
-        registerWeapon("EWDBShotGun", new ProjectileWeapon("DBShotGun", ProjectileWeaponTypes.SHOTGUN, 10, 31, 5, .3f).setShotsPerClick(8));
-        registerWeapon("EWHandGun", new ProjectileWeapon("HangGun", ProjectileWeaponTypes.HANDGUN, 5, 40, 5, .1f));
-        registerWeapon("EWSniper", new ProjectileWeapon("Sniper", ProjectileWeaponTypes.RIFLE, 15, 60, 60, .01f));
-    }
-
     /** @param name - not the weapon name but the name used to id it
      * @param weapon - instance of the weapon */
     public static void registerWeapon(String name, ProjectileWeapon weapon)
