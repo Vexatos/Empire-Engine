@@ -63,11 +63,11 @@
 		<!-- Copy compiled files into folders to be zipped -->
 		<copy todir="core">
 			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/empire/core/" />
-            <fileset dir="${dir.development}src/CORE/assets" excludes=".git/**" />
+            <fileset dir="${dir.development}src/CORE" includes="assets/" />
 		</copy>
 		<copy todir="ew">
 			<fileset dir="${dir.mcp}/reobf/minecraft" includes="dark/empire/weapons/" />
-            <fileset dir="${dir.development}src/WEAPONS/assets" excludes=".git/**" />
+            <fileset dir="${dir.development}src/WEAPONS" includes="assets/" />
 		</copy>
         
         <copy todir="output" file="LICENSE.txt" />
