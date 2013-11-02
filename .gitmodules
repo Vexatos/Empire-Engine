@@ -1,0 +1,3 @@
+[submodule "coremachine"]
+	path = coremachine
+	url = https://github.com/DarksCoreMachine/CoreMachine.git
