@@ -27,7 +27,11 @@
             <fileset dir="${dir.development}coremachine/src">
 				<exclude name=".git/**"/>
 				<exclude name="**/*.xml"/>
-			</fileset>			
+			</fileset>	
+            <fileset dir="${dir.development}coremachine/API">
+				<exclude name=".git/**"/>
+				<exclude name="**/*.xml"/>
+			</fileset>		            
 		</copy>
 		
 		<!-- Make all directories -->
