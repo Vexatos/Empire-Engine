@@ -14,7 +14,7 @@ import dark.empire.api.weapons.IBullet;
 import dark.empire.weapons.EmpireWeapons;
 
 /** Class for bullets, clips, and ammo in general
- * 
+ *
  * @author DarkGuardsman */
 public class ItemBullet extends ItemBasic implements IBullet
 {
@@ -31,10 +31,16 @@ public class ItemBullet extends ItemBasic implements IBullet
     @Override
     public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
     {
-        par3List.add(new ItemStack(this, 1, BulletData.SMALL_BULLET.ordinal() * spacing + 1));
-        par3List.add(new ItemStack(this, 1, BulletData.MEDIUM_BULLET.ordinal() * spacing + 1));
-        par3List.add(new ItemStack(this, 1, BulletData.SHOTGUN_SHELL.ordinal() * spacing + 1));
-
+        for (BulletData data : BulletData.values())
+        {
+            for (BulletTypes type : BulletTypes.values())
+            {
+                if (type != type.SHELL || type == type.SHELL && data.hasShell)
+                {
+                    par3List.add(new ItemStack(this, 1, data.ordinal() * spacing + type.ordinal()));
+                }
+            }
+        }
     }
 
     @Override
@@ -59,6 +65,7 @@ public class ItemBullet extends ItemBasic implements IBullet
     @Override
     public void registerIcons(IconRegister par1IconRegister)
     {
+        BulletData.MUSKET_BALL.icons[1] = par1IconRegister.registerIcon(EmpireWeapons.instance.PREFIX + "Bullet_ball");
         BulletData.SMALL_BULLET.icons[1] = par1IconRegister.registerIcon(EmpireWeapons.instance.PREFIX + "Bullet_small");
         BulletData.SMALL_BULLET.icons[0] = par1IconRegister.registerIcon(EmpireWeapons.instance.PREFIX + "shell");
         BulletData.MEDIUM_BULLET.icons[1] = par1IconRegister.registerIcon(EmpireWeapons.instance.PREFIX + "Bullet_medium");
@@ -113,26 +120,33 @@ public class ItemBullet extends ItemBasic implements IBullet
 
     public static enum BulletData
     {
-        MUSKET_BALL("ball", AmmoType.BALL),
+        MUSKET_BALL("ball", AmmoType.BALL, false),
         SMALL_BULLET("small", AmmoType.SMALL),
         MEDIUM_BULLET("medium", AmmoType.MEDIUM),
         HEAVY_BULLET("heavy", AmmoType.HEAVY),
-        SHOTGUN_SHELL("shotgun", AmmoType.SHOTGUN, 8);
+        SHOTGUN_SHELL("shotgun", AmmoType.SHOTGUN, true, 8);
         public String name;
         public AmmoType type;
         public Icon[] icons = new Icon[spacing];
         public Bullet[] bullets;
         public int r = 1;
+        boolean hasShell = true;
 
         private BulletData(String name, AmmoType type)
         {
-            this(name, type, 1);
+            this(name, type, true, 1);
         }
 
-        private BulletData(String name, AmmoType type, int rr)
+        private BulletData(String name, AmmoType type, boolean shell)
+        {
+            this(name, type, shell, 1);
+        }
+
+        private BulletData(String name, AmmoType type, boolean shell, int rr)
         {
             this.name = name;
             this.type = type;
+            this.hasShell = shell;
             this.r = rr;
             this.bullets = new Bullet[BulletTypes.values().length];
             for (int i = 0; i < bullets.length; i++)
@@ -144,11 +158,8 @@ public class ItemBullet extends ItemBasic implements IBullet
 
     public static enum BulletTypes
     {
-        SHELL("SHELL"),
-        NORMAL(""),
-        HE("HE"),
-        FIRE("FIRE"),
-        POISON("POISON");
+        SHELL("shell"),
+        NORMAL("");
         public String name;
 
         private BulletTypes(String name)

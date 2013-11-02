@@ -3,7 +3,9 @@ package dark.empire.weapons;
 import java.io.File;
 import java.util.Arrays;
 
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.prefab.TranslationHelper;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
@@ -21,7 +23,9 @@ import dark.core.network.PacketHandler;
 import dark.core.prefab.ModPrefab;
 import dark.core.registration.ModObjectRegistry;
 import dark.empire.weapons.items.ItemBullet;
+import dark.empire.weapons.items.ItemBullet.BulletTypes;
 import dark.empire.weapons.items.ItemProjectileWeapon;
+import dark.empire.weapons.items.ItemBullet.BulletData;
 
 @Mod(modid = EmpireWeapons.MOD_ID, name = EmpireWeapons.MOD_NAME, version = EmpireWeapons.VERSION, dependencies = "after:EmpireEngine", useMetadata = true)
 @NetworkMod(channels = { EmpireWeapons.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
@@ -77,6 +81,18 @@ public class EmpireWeapons extends ModPrefab
     public void init(FMLInitializationEvent event)
     {
         super.init(event);
+
+        if (EWRecipeLoader.itemBullet instanceof ItemBullet)
+        {
+            for (BulletData data : BulletData.values())
+            {
+                for (BulletTypes type : BulletTypes.values())
+                {
+                    OreDictionary.registerOre("bullet."+data.name +"."+ type.name, new ItemStack(EWRecipeLoader.itemBullet,1,data.ordinal() * ItemBullet.spacing + type.ordinal()));
+                }
+            }
+
+        }
         FMLLog.info(" Loaded: " + TranslationHelper.loadLanguages(LANGUAGE_PATH, LANGUAGES_SUPPORTED) + " Languages.");
         proxy.init();
     }
