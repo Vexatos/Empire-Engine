@@ -167,6 +167,7 @@ public class ItemProjectileWeapon extends ItemBasic
                             DamageSource damageSource = DamageSource.causePlayerDamage((EntityPlayer) entityLiving);
                             if (hitMOP.entityHit.attackEntityFrom(damageSource, damage))
                             {
+                                bullet.onImpact(hitMOP.entityHit);
                                 hitMOP.entityHit.addVelocity(lookVec.xCoord * 0.2, 0, lookVec.zCoord * 0.2);
                             }
                         }

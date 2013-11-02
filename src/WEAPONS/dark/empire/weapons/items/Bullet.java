@@ -24,7 +24,7 @@ public class Bullet
         this.mass = mass;
     }
 
-    public void onImpact(Entity entity, Vector3 motion)
+    public void onImpact(Entity entity)
     {
 
     }
