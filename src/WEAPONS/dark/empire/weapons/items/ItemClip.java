@@ -3,7 +3,7 @@ package dark.empire.weapons.items;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
-import net.minecraftforge.common.Configuration;
+import dark.core.prefab.ModPrefab;
 import dark.core.prefab.items.ItemBasic;
 import dark.empire.weapons.EmpireWeapons;
 
@@ -12,7 +12,7 @@ public class ItemClip extends ItemBasic
 
     public ItemClip()
     {
-        super(EmpireWeapons.getNextItemId(), "EWAmmoClip", EmpireWeapons.CONFIGURATION);
+        super(ModPrefab.getNextItemId(), "EWAmmoClip", EmpireWeapons.CONFIGURATION);
         this.setCreativeTab(CreativeTabs.tabCombat);
     }
 
@@ -45,7 +45,7 @@ public class ItemClip extends ItemBasic
         MEDIUM_CLIP_EXTENDED("Clip", 30, 1),
         MEDIUM_CLIP_DRUM("Drum Clip", 60, 1),
         LARGE_CLIP("Large Cal Clip", 10, 1),
-        LARGE_CLIP_EXTENDED("Large Cal Clip",20, 1),
+        LARGE_CLIP_EXTENDED("Large Cal Clip", 20, 1),
         LARGE_CLIP_DRUM("Large Cal Clip", 40, 1),
         BELT("Belt", 120, 1),
         BOX("Ammo Box", 240, 1);

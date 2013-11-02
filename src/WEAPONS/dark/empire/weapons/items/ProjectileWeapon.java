@@ -33,6 +33,7 @@ public class ProjectileWeapon
         this.fallOffPerMeter = fallOffPerMeter;
         this.upgrades = new WeaponUpgrade[WeaponUpgrade.WeaponUpgradeType.values().length];
     }
+
     public ProjectileWeapon setMaxRange(int range)
     {
         this.range = range;
@@ -40,7 +41,7 @@ public class ProjectileWeapon
     }
 
     /** Called when the gun is fired by the entity with the given bullet
-     *
+     * 
      * @param entity - entity firing use this for aim location
      * @param bullet - bullet fired
      * @return true to stop the built in firing code and replace it with your own custom code */

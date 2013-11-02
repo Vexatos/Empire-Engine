@@ -1,18 +1,18 @@
 package dark.empire.weapons.client;
 
-import cpw.mods.fml.common.registry.TickRegistry;
-import cpw.mods.fml.relauncher.Side;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import net.minecraftforge.client.MinecraftForgeClient;
 import net.minecraftforge.common.MinecraftForge;
+import cpw.mods.fml.common.registry.TickRegistry;
+import cpw.mods.fml.relauncher.Side;
 import dark.empire.weapons.EWCommonProxy;
 import dark.empire.weapons.EWRecipeLoader;
-import dark.empire.weapons.items.ItemProjectileWeapon;
 import dark.empire.weapons.items.PlayerTickHandler;
 
 public class EWClientProxy extends EWCommonProxy
 {
+    @Override
     public void preInit()
     {
         super.preInit();
@@ -20,6 +20,7 @@ public class EWClientProxy extends EWCommonProxy
         TickRegistry.registerTickHandler(PlayerTickHandler.instance, Side.CLIENT);
     }
 
+    @Override
     public void init()
     {
 
@@ -30,6 +31,7 @@ public class EWClientProxy extends EWCommonProxy
         super.init();
     }
 
+    @Override
     public void postInit()
     {
         super.postInit();

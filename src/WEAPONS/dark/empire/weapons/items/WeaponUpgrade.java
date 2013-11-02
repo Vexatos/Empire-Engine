@@ -2,9 +2,9 @@ package dark.empire.weapons.items;
 
 import java.util.logging.Level;
 
-import cpw.mods.fml.common.FMLLog;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import cpw.mods.fml.common.FMLLog;
 
 public class WeaponUpgrade
 {

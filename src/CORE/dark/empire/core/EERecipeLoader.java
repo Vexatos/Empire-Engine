@@ -15,6 +15,7 @@ public class EERecipeLoader extends RecipeLoader
         return instance;
     }
 
+    @Override
     public void loadRecipes()
     {
         super.loadRecipes();

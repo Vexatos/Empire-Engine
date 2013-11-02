@@ -2,8 +2,6 @@ package dark.empire.weapons.items;
 
 import java.util.Random;
 
-import universalelectricity.core.vector.Vector3;
-
 import net.minecraft.entity.Entity;
 
 public class Bullet

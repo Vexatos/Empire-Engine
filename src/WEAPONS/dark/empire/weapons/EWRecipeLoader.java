@@ -22,6 +22,7 @@ public class EWRecipeLoader extends RecipeLoader
         return instance;
     }
 
+    @Override
     public void loadRecipes()
     {
         super.loadRecipes();

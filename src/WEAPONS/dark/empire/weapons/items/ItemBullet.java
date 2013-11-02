@@ -8,12 +8,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.core.prefab.ModPrefab;
 import dark.core.prefab.items.ItemBasic;
 import dark.empire.api.weapons.IBullet;
 import dark.empire.weapons.EmpireWeapons;
 
 /** Class for bullets, clips, and ammo in general
- *
+ * 
  * @author DarkGuardsman */
 public class ItemBullet extends ItemBasic implements IBullet
 {
@@ -21,7 +22,7 @@ public class ItemBullet extends ItemBasic implements IBullet
 
     public ItemBullet()
     {
-        super(EmpireWeapons.getNextItemId(), "EWItemBullet", EmpireWeapons.CONFIGURATION);
+        super(ModPrefab.getNextItemId(), "EWItemBullet", EmpireWeapons.CONFIGURATION);
         this.setHasSubtypes(true);
         this.setCreativeTab(CreativeTabs.tabCombat);
     }
@@ -34,6 +35,12 @@ public class ItemBullet extends ItemBasic implements IBullet
         par3List.add(new ItemStack(this, 1, BulletData.MEDIUM_BULLET.ordinal() * spacing + 1));
         par3List.add(new ItemStack(this, 1, BulletData.SHOTGUN_SHELL.ordinal() * spacing + 1));
 
+    }
+
+    @Override
+    public final String getUnlocalizedName(ItemStack par1ItemStack)
+    {
+        return this.getUnlocalizedName() + "." + par1ItemStack.getItemDamage();
     }
 
     @Override
@@ -90,6 +97,7 @@ public class ItemBullet extends ItemBasic implements IBullet
         return null;
     }
 
+    @Override
     public AmmoType getType(ItemStack stack)
     {
         if (stack != null)

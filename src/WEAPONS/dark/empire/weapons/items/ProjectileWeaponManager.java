@@ -11,10 +11,9 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
-import universalelectricity.core.vector.Vector3;
 
 /** Registers and manages weapons plus upgrades
- *
+ * 
  * @author DarkGuardsman */
 public class ProjectileWeaponManager
 {
@@ -116,7 +115,7 @@ public class ProjectileWeaponManager
             if (entityHit != null && entityHit.canBeCollidedWith() && entityHit.boundingBox != null)
             {
                 float border = entityHit.getCollisionBorderSize();
-                AxisAlignedBB aabb = entityHit.boundingBox.expand((double) border, (double) border, (double) border);
+                AxisAlignedBB aabb = entityHit.boundingBox.expand(border, border, border);
                 MovingObjectPosition hitMOP = aabb.calculateIntercept(playerPosition, playerViewOffset);
 
                 if (hitMOP != null)

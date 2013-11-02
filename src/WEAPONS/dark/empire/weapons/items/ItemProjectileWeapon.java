@@ -24,19 +24,20 @@ import com.builtbroken.common.Pair;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.client.Effects;
+import dark.core.prefab.ModPrefab;
 import dark.core.prefab.helpers.ItemWorldHelper;
 import dark.core.prefab.items.ItemBasic;
 import dark.empire.api.weapons.IBullet;
 import dark.empire.weapons.EmpireWeapons;
 
 /** Basic Projectile weapon class that stores all the attributes of the weapon as NBT
- *
+ * 
  * @author DarkGaurdsman */
 public class ItemProjectileWeapon extends ItemBasic
 {
     public ItemProjectileWeapon()
     {
-        super(EmpireWeapons.getNextID(), "EWProjectilWeapon", EmpireWeapons.CONFIGURATION);
+        super(ModPrefab.getNextID(), "EWProjectilWeapon", EmpireWeapons.CONFIGURATION);
         this.setMaxStackSize(1);
         this.setCreativeTab(CreativeTabs.tabCombat);
         this.setNoRepair();
@@ -180,9 +181,9 @@ public class ItemProjectileWeapon extends ItemBasic
                 {
                     float damage = weapon.getDamage(entityLiving.worldObj.rand) + bullet.getDamage(entityLiving.worldObj.rand);
                     float delta = weapon.range * weapon.fallOffPerMeter;
-                    float par1 = (float) (entityLiving.worldObj.rand.nextFloat() * (entityLiving.worldObj.rand.nextBoolean() ? -delta : delta));
-                    float par3 = (float) (entityLiving.worldObj.rand.nextFloat() * (entityLiving.worldObj.rand.nextBoolean() ? -delta : delta));
-                    float par5 = (float) (entityLiving.worldObj.rand.nextFloat() * (entityLiving.worldObj.rand.nextBoolean() ? -delta : delta));
+                    float par1 = (entityLiving.worldObj.rand.nextFloat() * (entityLiving.worldObj.rand.nextBoolean() ? -delta : delta));
+                    float par3 = (entityLiving.worldObj.rand.nextFloat() * (entityLiving.worldObj.rand.nextBoolean() ? -delta : delta));
+                    float par5 = (entityLiving.worldObj.rand.nextFloat() * (entityLiving.worldObj.rand.nextBoolean() ? -delta : delta));
                     Vec3 e = new Vector3(par1, par3, par5).toVec3();
                     MovingObjectPosition hitMOP = ProjectileWeaponManager.ray_trace_do(entityLiving.worldObj, entityLiving, e, weapon.range, true);
                     entityLiving.worldObj.playSound(entityLiving.posX, entityLiving.posY, entityLiving.posZ, EmpireWeapons.instance.PREFIX + "shotgun2", 0.5f, 0.7f, true);
@@ -242,6 +243,12 @@ public class ItemProjectileWeapon extends ItemBasic
         {
             par3List.add(ItemProjectileWeapon.createNewWeapon("creative", gun.weapon, new ItemStack(this, 1, gun.ordinal())));
         }
+    }
+
+    @Override
+    public final String getUnlocalizedName(ItemStack par1ItemStack)
+    {
+        return this.getUnlocalizedName() + "." + par1ItemStack.getItemDamage();
     }
 
     /** Stores data about default meta value of the guns */

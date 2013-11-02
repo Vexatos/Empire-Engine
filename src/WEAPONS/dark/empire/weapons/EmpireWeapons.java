@@ -17,15 +17,11 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
-import cpw.mods.fml.common.registry.TickRegistry;
-import cpw.mods.fml.relauncher.Side;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.ModPrefab;
 import dark.core.registration.ModObjectRegistry;
 import dark.empire.weapons.items.ItemBullet;
 import dark.empire.weapons.items.ItemProjectileWeapon;
-import dark.empire.weapons.items.ProjectileWeaponManager;
-import dark.empire.weapons.items.PlayerTickHandler;
 
 @Mod(modid = EmpireWeapons.MOD_ID, name = EmpireWeapons.MOD_NAME, version = EmpireWeapons.VERSION, dependencies = "after:EmpireEngine", useMetadata = true)
 @NetworkMod(channels = { EmpireWeapons.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
