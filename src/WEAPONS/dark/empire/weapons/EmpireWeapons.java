@@ -130,9 +130,11 @@ public class EmpireWeapons extends ModPrefab
     @Override
     public void registerObjects()
     {
+        this.CONFIGURATION.load();
         EWRecipeLoader.instance();
         EWRecipeLoader.itemGun = ModObjectRegistry.createNewItem("EWItemGun", MOD_ID, ItemProjectileWeapon.class, true);
         EWRecipeLoader.itemBullet = ModObjectRegistry.createNewItem("EWItemBullet", MOD_ID, ItemBullet.class, true);
+        this.CONFIGURATION.save();
 
     }
 
