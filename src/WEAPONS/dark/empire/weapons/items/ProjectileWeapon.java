@@ -3,8 +3,10 @@ package dark.empire.weapons.items;
 import java.util.Random;
 import java.util.logging.Level;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.Icon;
 import cpw.mods.fml.common.FMLLog;
 
 public class ProjectileWeapon
@@ -13,15 +15,45 @@ public class ProjectileWeapon
     protected ProjectileWeaponTypes type;
     protected float maxDamage = 1, minDamage = 1;
     protected float critChance = .05f, critMuliplier = 1.1f;//10% bonus damage
+    protected float range = 300, fallOffPerMeter = .1f;
+    protected int shotsPerClick = 1;
+    /** Time to reload the weapon per clip or shell if no clip */
+    protected int reloadTicks = 20;
+    /** Time before the next round */
+    protected int fireDelayTicks = 10;
     protected WeaponUpgrade[] upgrades;
-    protected float velocity = 600;
+    public Icon icon;
 
-    public ProjectileWeapon(String name, ProjectileWeaponTypes type, float damage)
+    public ProjectileWeapon(String name, ProjectileWeaponTypes type, float damage, int reloadTime, int fireDelay, float fallOffPerMeter)
     {
         this.name = name;
         this.maxDamage = damage;
         this.type = type;
+        this.reloadTicks = reloadTime;
+        this.fireDelayTicks = fireDelay;
+        this.fallOffPerMeter = fallOffPerMeter;
         this.upgrades = new WeaponUpgrade[WeaponUpgrade.WeaponUpgradeType.values().length];
+    }
+
+    public ProjectileWeapon setShotsPerClick(int shots)
+    {
+        this.shotsPerClick = shots;
+        return this;
+    }
+    public ProjectileWeapon setMaxRange(int range)
+    {
+        this.range = range;
+        return this;
+    }
+
+    /** Called when the gun is fired by the entity with the given bullet
+     *
+     * @param entity - entity firing use this for aim location
+     * @param bullet - bullet fired
+     * @return true to stop the built in firing code and replace it with your own custom code */
+    public boolean onFired(Entity entity, Bullet bullet)
+    {
+        return false;
     }
 
     /** Creates a new entity and loads its data from the specified NBT. */

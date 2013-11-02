@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.Map.Entry;
 
 import net.minecraft.entity.Entity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
@@ -16,8 +18,16 @@ import universalelectricity.core.vector.Vector3;
  * @author DarkGuardsman */
 public class ProjectileWeaponManager
 {
-    private static HashMap<String, WeaponUpgrade> weaponUpgrades = new HashMap();
-    private static HashMap<String, ProjectileWeapon> weapons = new HashMap();
+    public static HashMap<String, WeaponUpgrade> weaponUpgrades = new HashMap();
+    public static HashMap<String, ProjectileWeapon> weapons = new HashMap();
+
+    static
+    {
+        registerWeapon("EWPumpShotGun", new ProjectileWeapon("PumpShotGun", ProjectileWeaponTypes.SHOTGUN, 10, 21, 25, .3f).setShotsPerClick(8));
+        registerWeapon("EWDBShotGun", new ProjectileWeapon("DBShotGun", ProjectileWeaponTypes.SHOTGUN, 10, 31, 5, .3f).setShotsPerClick(8));
+        registerWeapon("EWHandGun", new ProjectileWeapon("HangGun", ProjectileWeaponTypes.HANDGUN, 5, 40, 5, .1f));
+        registerWeapon("EWSniper", new ProjectileWeapon("Sniper", ProjectileWeaponTypes.RIFLE, 15, 60, 60, .01f));
+    }
 
     /** @param name - not the weapon name but the name used to id it
      * @param weapon - instance of the weapon */
@@ -64,7 +74,7 @@ public class ProjectileWeaponManager
 
     public static String getWeaponID(ProjectileWeapon upgrade)
     {
-        String id = null;
+        String id = "Unkown";
         for (Entry<String, ProjectileWeapon> entry : weapons.entrySet())
         {
             if (entry.getValue() != null && entry.getValue().getName().equalsIgnoreCase(upgrade.getName()))
@@ -73,6 +83,21 @@ public class ProjectileWeaponManager
             }
         }
         return id;
+    }
+
+    public static ProjectileWeapon getWeapon(ItemStack stack)
+    {
+        ProjectileWeapon weapon = null;
+        if (stack != null)
+        {
+            if (stack.getTagCompound() == null)
+            {
+                stack.setTagCompound(new NBTTagCompound());
+            }
+            return ProjectileWeapon.createAndLoadWeapon(stack.getTagCompound().getCompoundTag("GunData"));
+        }
+
+        return weapon;
     }
 
     public static MovingObjectPosition raytraceEntities(World world, Entity entity, Vec3 error, double reachDistance, boolean collisionFlag)

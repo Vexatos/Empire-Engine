@@ -2,22 +2,22 @@ package dark.empire.weapons.items;
 
 import java.util.List;
 
-import universalelectricity.core.vector.Vector3;
-
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import universalelectricity.core.vector.Vector3;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.core.client.Effects;
 import dark.core.prefab.items.ItemBasic;
 import dark.empire.weapons.EmpireWeapons;
 
@@ -31,12 +31,43 @@ public class ItemProjectileWeapon extends ItemBasic
         super(EmpireWeapons.getNextID(), "EWProjectilWeapon", EmpireWeapons.CONFIGURATION);
         this.setMaxStackSize(1);
         this.setCreativeTab(CreativeTabs.tabCombat);
+        this.setNoRepair();
+        this.setHasSubtypes(true);
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public void addInformation(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, List par3List, boolean par4)
+    public void addInformation(ItemStack stack, EntityPlayer player, List par3List, boolean par4)
     {
+        ProjectileWeapon weapon = Guns.get(stack.getItemDamage()).weapon;
+        if (stack.getTagCompound() == null)
+        {
+            stack.setTagCompound(new NBTTagCompound());
+        }
+        String creator = stack.getTagCompound().getString("Creator");
+        if (weapon != null)
+        {
+            if (creator.equalsIgnoreCase("creative") || creator.equalsIgnoreCase(player.username))
+            {
+                par3List.add("Range: " + weapon.range + "m");
+                par3List.add("FallOff: " + weapon.fallOffPerMeter + "m per m");
+                par3List.add("FireDelay: " + (weapon.fireDelayTicks / 20) + "s");
+                par3List.add("Reload Time: " + (weapon.reloadTicks / 20) + "s");
+                par3List.add("Damage: " + weapon.minDamage + " - " + weapon.maxDamage);
+            }
+            if (!creator.equalsIgnoreCase("creative") && creator == "")
+            {
+                par3List.add("Created by: " + creator);
+            }
+            else if (creator.equalsIgnoreCase("creative"))
+            {
+                par3List.add("Created by Magic Gun Dwarfs");
+            }
+        }
+        else
+        {
+            par3List.add("No weapon data");
+        }
     }
 
     public ItemStack addComponentToWeapons(ItemStack stack)
@@ -44,9 +75,18 @@ public class ItemProjectileWeapon extends ItemBasic
         return stack;
     }
 
-    public static ItemStack createNewWeapon()
+    public static ItemStack createNewWeapon(String creator, ProjectileWeapon weapon, ItemStack stack)
     {
-        return null;
+        if (stack != null && stack.getItem() instanceof ItemProjectileWeapon)
+        {
+            if (stack.getTagCompound() == null)
+            {
+                stack.setTagCompound(new NBTTagCompound());
+            }
+            stack.getTagCompound().setCompoundTag("GunData", weapon.save(new NBTTagCompound()));
+            stack.getTagCompound().setString("Creator", creator);
+        }
+        return stack;
     }
 
     @Override
@@ -55,22 +95,31 @@ public class ItemProjectileWeapon extends ItemBasic
         return false;
     }
 
-    public EnumAction getItemUseAction(ItemStack par1ItemStack)
+    @Override
+    public Icon getIconFromDamage(int i)
     {
-        return EnumAction.bow;
+        ProjectileWeapon weapon = Guns.get(i).weapon;
+        if (weapon != null)
+        {
+            return weapon.icon;
+        }
+        return null;
     }
 
     @SideOnly(Side.CLIENT)
     @Override
-    public Icon getIconIndex(ItemStack par1ItemStack)
+    public void registerIcons(IconRegister par1IconRegister)
     {
-        return this.getIconFromDamage(par1ItemStack.getItemDamage());
+        for (Guns gun : Guns.values())
+        {
+            gun.weapon.icon = par1IconRegister.registerIcon(EmpireWeapons.instance.PREFIX + "Gun_" + gun.weapon.getName());
+        }
     }
 
     @Override
     public boolean onItemUse(ItemStack itemStack, EntityPlayer entityPlayer, World world, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
     {
-
+        //TODO reload or use R for reload
         return false;
     }
 
@@ -83,71 +132,81 @@ public class ItemProjectileWeapon extends ItemBasic
     @Override
     public boolean onEntitySwing(EntityLivingBase entityLiving, ItemStack stack)
     {
+        //TODO check for close range swing to do melee damage rather than fire the gun.. Or have alt fire for melee attacks
         if (entityLiving instanceof EntityPlayer)
         {
-            for (int i = 0; i < 30; i++)
+            ProjectileWeapon weapon = Guns.get(stack.getItemDamage()).weapon;
+            Bullet bullet = Bullet.NINE_MM;
+            if (weapon != null && !weapon.onFired(entityLiving, bullet))
             {
-                float damage = 10;
-                float accuraceLose = .045f;
-                float range = 300;
-                float delta = range * accuraceLose;
-                float par1 = (float) (entityLiving.worldObj.rand.nextFloat() * (entityLiving.worldObj.rand.nextBoolean() ? -delta : delta));
-                float par3 = (float) (entityLiving.worldObj.rand.nextFloat() * (entityLiving.worldObj.rand.nextBoolean() ? -delta : delta));
-                float par5 = (float) (entityLiving.worldObj.rand.nextFloat() * (entityLiving.worldObj.rand.nextBoolean() ? -delta : delta));
-                Vec3 e = new Vector3(par1, par3, par5).toVec3();
-                MovingObjectPosition hitMOP = ProjectileWeaponManager.ray_trace_do(entityLiving.worldObj, entityLiving, e, range, true);
-                entityLiving.worldObj.playSound(entityLiving.posX, entityLiving.posY, entityLiving.posZ, EmpireWeapons.instance.PREFIX + "shotgun2", 0.5f, 0.7f, true);
-                Vec3 lookVec = entityLiving.getLookVec();
-                if (hitMOP != null)
+                for (int i = 0; i < weapon.shotsPerClick; i++)
                 {
-                    if (hitMOP.entityHit != null)
+                    float damage = weapon.getDamage(entityLiving.worldObj.rand) + bullet.getDamage(entityLiving.worldObj.rand);
+                    float delta = weapon.range * weapon.fallOffPerMeter;
+                    float par1 = (float) (entityLiving.worldObj.rand.nextFloat() * (entityLiving.worldObj.rand.nextBoolean() ? -delta : delta));
+                    float par3 = (float) (entityLiving.worldObj.rand.nextFloat() * (entityLiving.worldObj.rand.nextBoolean() ? -delta : delta));
+                    float par5 = (float) (entityLiving.worldObj.rand.nextFloat() * (entityLiving.worldObj.rand.nextBoolean() ? -delta : delta));
+                    Vec3 e = new Vector3(par1, par3, par5).toVec3();
+                    MovingObjectPosition hitMOP = ProjectileWeaponManager.ray_trace_do(entityLiving.worldObj, entityLiving, e, weapon.range, true);
+                    entityLiving.worldObj.playSound(entityLiving.posX, entityLiving.posY, entityLiving.posZ, EmpireWeapons.instance.PREFIX + "shotgun2", 0.5f, 0.7f, true);
+                    Vec3 lookVec = entityLiving.getLookVec();
+                    if (hitMOP != null)
                     {
-                        drawParticleStreamTo(entityLiving, entityLiving.worldObj, hitMOP.hitVec.xCoord, hitMOP.hitVec.yCoord, hitMOP.hitVec.zCoord);
-                        DamageSource damageSource = DamageSource.causePlayerDamage((EntityPlayer) entityLiving);
-                        if (hitMOP.entityHit.attackEntityFrom(damageSource, damage))
+                        if (hitMOP.entityHit != null)
                         {
-                            hitMOP.entityHit.addVelocity(lookVec.xCoord * 0.2, 0, lookVec.zCoord * 0.2);
+                            DamageSource damageSource = DamageSource.causePlayerDamage((EntityPlayer) entityLiving);
+                            if (hitMOP.entityHit.attackEntityFrom(damageSource, damage))
+                            {
+                                hitMOP.entityHit.addVelocity(lookVec.xCoord * 0.2, 0, lookVec.zCoord * 0.2);
+                            }
                         }
+                        Effects.drawParticleStreamTo(entityLiving, entityLiving.worldObj, hitMOP.hitVec.xCoord, hitMOP.hitVec.yCoord, hitMOP.hitVec.zCoord);
                     }
-                    drawParticleStreamTo(entityLiving, entityLiving.worldObj, hitMOP.hitVec.xCoord, hitMOP.hitVec.yCoord, hitMOP.hitVec.zCoord);
                 }
+                ((EntityPlayer) entityLiving).setItemInUse(stack, 20);
             }
-            ((EntityPlayer) entityLiving).setItemInUse(stack, 10);
         }
         return true;
-    }
-
-    public void drawParticleStreamTo(Entity shooter, World world, double x, double y, double z)
-    {
-        Vec3 direction = shooter.getLookVec().normalize();
-        double scale = 1.0;
-        double xoffset = 1.3f;
-        double yoffset = -.2;
-        double zoffset = 0.3f;
-        Vec3 horzdir = direction.normalize();
-        horzdir.yCoord = 0;
-        horzdir = horzdir.normalize();
-        double cx = shooter.posX + direction.xCoord * xoffset - direction.yCoord * horzdir.xCoord * yoffset - horzdir.zCoord * zoffset;
-        double cy = shooter.posY + shooter.getEyeHeight() + direction.yCoord * xoffset + (1 - Math.abs(direction.yCoord)) * yoffset;
-        double cz = shooter.posZ + direction.zCoord * xoffset - direction.yCoord * horzdir.zCoord * yoffset + horzdir.xCoord * zoffset;
-        double dx = x - cx;
-        double dy = y - cy;
-        double dz = z - cz;
-        double ratio = Math.sqrt(dx * dx + dy * dy + dz * dz);
-
-        while (Math.abs(cx - x) > Math.abs(dx / ratio))
-        {
-            world.spawnParticle("townaura", cx, cy, cz, 0.0D, 0.0D, 0.0D);
-            cx += dx * 0.1 / ratio;
-            cy += dy * 0.1 / ratio;
-            cz += dz * 0.1 / ratio;
-        }
     }
 
     @Override
     public float getStrVsBlock(ItemStack par1ItemStack, Block par2Block)
     {
         return 0.0F;
+    }
+
+    @SuppressWarnings("unchecked")
+    @Override
+    public void getSubItems(int par1, CreativeTabs par2CreativeTabs, List par3List)
+    {
+        for (Guns gun : Guns.values())
+        {
+            par3List.add(ItemProjectileWeapon.createNewWeapon("creative", gun.weapon, new ItemStack(this, 1, gun.ordinal())));
+        }
+    }
+
+    /** Stores data about default meta value of the guns */
+    public static enum Guns
+    {
+        HandGun(new ProjectileWeapon("HandGun", ProjectileWeaponTypes.HANDGUN, 5, 40, 5, .01f).setMaxRange(500)),
+        DBShotGun(new ProjectileWeapon("DBShotGun", ProjectileWeaponTypes.SHOTGUN, 10, 31, 5, .05f).setShotsPerClick(8).setMaxRange(600)),
+        PumpShotGun(new ProjectileWeapon("PumpShotGun", ProjectileWeaponTypes.SHOTGUN, 10, 21, 25, .05f).setShotsPerClick(8).setMaxRange(300)),
+        Sniper(new ProjectileWeapon("Sniper", ProjectileWeaponTypes.RIFLE, 15, 60, 60, .01f).setMaxRange(500).setMaxRange(1500));
+        ProjectileWeapon weapon;
+
+        private Guns(ProjectileWeapon weapon)
+        {
+            this.weapon = weapon;
+        }
+
+        public static Guns get(int itemDamage)
+        {
+            if (itemDamage < Guns.values().length)
+            {
+                return Guns.values()[itemDamage];
+            }
+            return HandGun;
+        }
     }
 
 }
