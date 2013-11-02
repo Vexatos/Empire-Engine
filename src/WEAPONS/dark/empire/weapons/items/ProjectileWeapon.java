@@ -15,7 +15,7 @@ public class ProjectileWeapon
     protected AmmoType type;
     protected float maxDamage = 1, minDamage = 1;
     protected float critChance = .05f, critMuliplier = 1.1f;//10% bonus damage
-    protected float range = 300, fallOffPerMeter = .1f;
+    protected float range = 300, fallOffPerMeter = .01f;
     /** Time to reload the weapon per clip or shell if no clip */
     protected int reloadTicks = 20;
     /** Time before the next round */
@@ -41,7 +41,7 @@ public class ProjectileWeapon
     }
 
     /** Called when the gun is fired by the entity with the given bullet
-     * 
+     *
      * @param entity - entity firing use this for aim location
      * @param bullet - bullet fired
      * @return true to stop the built in firing code and replace it with your own custom code */

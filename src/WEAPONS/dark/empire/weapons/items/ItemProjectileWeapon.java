@@ -58,11 +58,20 @@ public class ItemProjectileWeapon extends ItemBasic
         {
             if (creator.equalsIgnoreCase("creative") || creator.equalsIgnoreCase(player.username))
             {
+                Pair<Integer, ItemStack> bullet_item = this.getBullet(player, weapon.type);
+                float dm = 0, dM = 0, f = 0;
+                if (bullet_item != null && bullet_item.right() != null && bullet_item.right().getItem() instanceof IBullet)
+                {
+                    Bullet bullet = ((IBullet) bullet_item.right().getItem()).getBullet(bullet_item.right());
+                    dm = bullet.bulletDamage;
+                    dM = bullet.bulletDamageMax;
+                    f = bullet.fallOff;
+                }
                 par3List.add("Range: " + weapon.range + "m");
-                par3List.add("FallOff: " + weapon.fallOffPerMeter + "m per m");
+                par3List.add("FallOff: " + (weapon.fallOffPerMeter + f) + "m per m");
                 par3List.add("FireDelay: " + (weapon.fireDelayTicks / 20) + "s");
                 par3List.add("Reload Time: " + (weapon.reloadTicks / 20) + "s");
-                par3List.add("Damage: " + weapon.minDamage + " - " + weapon.maxDamage);
+                par3List.add("Damage: " + (weapon.minDamage + dm) + " - " + (weapon.maxDamage + dM));
             }
             if (!creator.equalsIgnoreCase("creative") && creator == "")
             {
@@ -178,7 +187,7 @@ public class ItemProjectileWeapon extends ItemBasic
                 for (int i = 0; i < bullet.rounds; i++)
                 {
                     float damage = weapon.getDamage(entityLiving.worldObj.rand) + bullet.getDamage(entityLiving.worldObj.rand);
-                    float delta = weapon.range * weapon.fallOffPerMeter;
+                    float delta = weapon.range * (weapon.fallOffPerMeter + bullet.fallOff);
                     float par1 = (entityLiving.worldObj.rand.nextFloat() * (entityLiving.worldObj.rand.nextBoolean() ? -delta : delta));
                     float par3 = (entityLiving.worldObj.rand.nextFloat() * (entityLiving.worldObj.rand.nextBoolean() ? -delta : delta));
                     float par5 = (entityLiving.worldObj.rand.nextFloat() * (entityLiving.worldObj.rand.nextBoolean() ? -delta : delta));
@@ -250,9 +259,9 @@ public class ItemProjectileWeapon extends ItemBasic
     /** Stores data about default meta value of the guns */
     public static enum Guns
     {
-        HandGun(new ProjectileWeapon("HandGun", AmmoType.SMALL, 5, 40, 5, .01f).setMaxRange(500)),
-        DBShotGun(new ProjectileWeapon("DBShotGun", AmmoType.SHOTGUN, 10, 31, 5, .05f).setMaxRange(600)),
-        PumpShotGun(new ProjectileWeapon("PumpShotGun", AmmoType.SHOTGUN, 10, 21, 25, .05f).setMaxRange(300));
+        HandGun(new ProjectileWeapon("HandGun", AmmoType.SMALL, 1, 40, 5, .01f).setMaxRange(500)),
+        DBShotGun(new ProjectileWeapon("DBShotGun", AmmoType.SHOTGUN, 3, 31, 5, .01f).setMaxRange(600)),
+        PumpShotGun(new ProjectileWeapon("PumpShotGun", AmmoType.SHOTGUN, 2, 21, 25, .01f).setMaxRange(300));
         ProjectileWeapon weapon;
 
         private Guns(ProjectileWeapon weapon)

@@ -120,39 +120,24 @@ public class ItemBullet extends ItemBasic implements IBullet
 
     public static enum BulletData
     {
-        MUSKET_BALL("ball", AmmoType.BALL, false),
-        SMALL_BULLET("small", AmmoType.SMALL),
-        MEDIUM_BULLET("medium", AmmoType.MEDIUM),
-        HEAVY_BULLET("heavy", AmmoType.HEAVY),
-        SHOTGUN_SHELL("shotgun", AmmoType.SHOTGUN, true, 8);
-        public String name;
-        public AmmoType type;
+        MUSKET_BALL("ball", AmmoType.BALL, false, Bullet.Thirteen_MM_Ball),
+        SMALL_BULLET("small", AmmoType.SMALL, true, Bullet.NINE_MM),
+        MEDIUM_BULLET("medium", AmmoType.MEDIUM, true, Bullet.TEN_MM),
+        HEAVY_BULLET("heavy", AmmoType.HEAVY, true, Bullet.Thirteen_MM),
+        SHOTGUN_SHELL("shotgun", AmmoType.SHOTGUN, true, Bullet.TWELVE_GUAGE);
+        public final String name;
+        public final AmmoType type;
         public Icon[] icons = new Icon[spacing];
         public Bullet[] bullets;
-        public int r = 1;
-        boolean hasShell = true;
+        public final boolean  hasShell;
 
-        private BulletData(String name, AmmoType type)
-        {
-            this(name, type, true, 1);
-        }
-
-        private BulletData(String name, AmmoType type, boolean shell)
-        {
-            this(name, type, shell, 1);
-        }
-
-        private BulletData(String name, AmmoType type, boolean shell, int rr)
+        private BulletData(String name, AmmoType type, boolean shell, Bullet bullet)
         {
             this.name = name;
             this.type = type;
             this.hasShell = shell;
-            this.r = rr;
             this.bullets = new Bullet[BulletTypes.values().length];
-            for (int i = 0; i < bullets.length; i++)
-            {
-                this.bullets[i] = new Bullet(this.name + BulletTypes.values()[i], rr);
-            }
+            this.bullets[1] = bullet;
         }
     }
 
@@ -160,7 +145,7 @@ public class ItemBullet extends ItemBasic implements IBullet
     {
         SHELL("shell"),
         NORMAL("");
-        public String name;
+        public final String name;
 
         private BulletTypes(String name)
         {
