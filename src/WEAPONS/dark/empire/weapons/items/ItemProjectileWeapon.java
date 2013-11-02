@@ -31,7 +31,7 @@ import dark.empire.api.weapons.IBullet;
 import dark.empire.weapons.EmpireWeapons;
 
 /** Basic Projectile weapon class that stores all the attributes of the weapon as NBT
- * 
+ *
  * @author DarkGaurdsman */
 public class ItemProjectileWeapon extends ItemBasic
 {
@@ -159,10 +159,8 @@ public class ItemProjectileWeapon extends ItemBasic
             Pair<Integer, ItemStack> bullet_item = this.getBullet(((EntityPlayer) entityLiving), weapon.type);
             Bullet bullet = Bullet.TEN_MM;
             ItemStack shell = null;
-            System.out.println("Gun Fired");
             if (bullet_item != null && bullet_item.right() != null && bullet_item.right().getItem() instanceof IBullet)
             {
-                System.out.println("Has Bullet");
                 bullet = ((IBullet) bullet_item.right().getItem()).getBullet(bullet_item.right());
                 shell = ((IBullet) bullet_item.right().getItem()).getShell(bullet_item.right());
             }
@@ -213,12 +211,10 @@ public class ItemProjectileWeapon extends ItemBasic
         for (int i = 0; i < player.inventory.getSizeInventory(); i++)
         {
             ItemStack inventoryStack = player.inventory.getStackInSlot(i);
-            System.out.println("Slot[" + i + "] Item: " + (inventoryStack != null ? inventoryStack.toString() : "null"));
             if (inventoryStack != null && inventoryStack.getItem() instanceof IBullet)
             {
                 boolean bullet = ((IBullet) inventoryStack.getItem()).getBullet(inventoryStack) != null;
                 int t = ((IBullet) inventoryStack.getItem()).getType(inventoryStack) != null ? ((IBullet) inventoryStack.getItem()).getType(inventoryStack).ordinal() : -1;
-                System.out.println("Is bullet: " + bullet + "   T:" + t);
                 if (((IBullet) inventoryStack.getItem()).getBullet(inventoryStack) != null && ((IBullet) inventoryStack.getItem()).getType(inventoryStack) == type)
                 {
                     return new Pair<Integer, ItemStack>(i, inventoryStack);
