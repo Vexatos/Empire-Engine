@@ -13,7 +13,7 @@ public class EWCommonProxy implements IGuiHandler
 
     public void preInit()
     {
-        TickRegistry.registerTickHandler(PlayerTickHandler.instance, Side.SERVER);
+
     }
 
     public void init()
