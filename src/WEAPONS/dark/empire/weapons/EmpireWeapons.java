@@ -24,6 +24,7 @@ import dark.core.prefab.ModPrefab;
 import dark.core.registration.ModObjectRegistry;
 import dark.empire.weapons.items.ItemProjectileWeapon;
 import dark.empire.weapons.items.ProjectileWeaponManager;
+import dark.empire.weapons.items.PlayerTickHandler;
 
 @Mod(modid = EmpireWeapons.MOD_ID, name = EmpireWeapons.MOD_NAME, version = EmpireWeapons.VERSION, dependencies = "after:EmpireEngine", useMetadata = true)
 @NetworkMod(channels = { EmpireWeapons.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)

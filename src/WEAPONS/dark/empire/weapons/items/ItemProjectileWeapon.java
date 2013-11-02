@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.texture.IconRegister;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.DamageSource;
@@ -75,6 +76,12 @@ public class ItemProjectileWeapon extends ItemBasic
         return stack;
     }
 
+    @Override
+    public EnumAction getItemUseAction(ItemStack par1ItemStack)
+    {
+        return EnumAction.bow;
+    }
+
     public static ItemStack createNewWeapon(String creator, ProjectileWeapon weapon, ItemStack stack)
     {
         if (stack != null && stack.getItem() instanceof ItemProjectileWeapon)
@@ -117,10 +124,13 @@ public class ItemProjectileWeapon extends ItemBasic
     }
 
     @Override
-    public boolean onItemUse(ItemStack itemStack, EntityPlayer entityPlayer, World world, int par4, int par5, int par6, int par7, float par8, float par9, float par10)
+    public ItemStack onItemRightClick(ItemStack par1ItemStack, World par2World, EntityPlayer entityPlayer)
     {
-        //TODO reload or use R for reload
-        return false;
+        if (entityPlayer != null)
+        {
+            PlayerTickHandler.onRightClick(entityPlayer.username);
+        }
+        return par1ItemStack;
     }
 
     @Override
@@ -163,10 +173,10 @@ public class ItemProjectileWeapon extends ItemBasic
                         Effects.drawParticleStreamTo(entityLiving, entityLiving.worldObj, hitMOP.hitVec.xCoord, hitMOP.hitVec.yCoord, hitMOP.hitVec.zCoord);
                     }
                 }
-                ((EntityPlayer) entityLiving).setItemInUse(stack, 20);
             }
+            return true;
         }
-        return true;
+        return false;
     }
 
     @Override

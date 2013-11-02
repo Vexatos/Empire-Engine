@@ -3,6 +3,9 @@ package dark.empire.weapons;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.world.World;
 import cpw.mods.fml.common.network.IGuiHandler;
+import cpw.mods.fml.common.registry.TickRegistry;
+import cpw.mods.fml.relauncher.Side;
+import dark.empire.weapons.items.PlayerTickHandler;
 
 public class EWCommonProxy implements IGuiHandler
 {
@@ -10,7 +13,7 @@ public class EWCommonProxy implements IGuiHandler
 
     public void preInit()
     {
-
+        TickRegistry.registerTickHandler(PlayerTickHandler.instance, Side.SERVER);
     }
 
     public void init()
