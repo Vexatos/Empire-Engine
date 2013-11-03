@@ -8,12 +8,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 /** Registers and manages weapons plus upgrades
- * 
+ *
  * @author DarkGuardsman */
 public class ProjectileWeaponManager
 {
@@ -182,6 +183,33 @@ public class ProjectileWeaponManager
             {
                 return hitBlock;
             }
+        }
+    }
+
+    public static Vec3 getLook(Entity entity, float par1)
+    {
+        float f1;
+        float f2;
+        float f3;
+        float f4;
+
+        if (par1 == 1.0F)
+        {
+            f1 = MathHelper.cos(-entity.rotationYaw * 0.017453292F - (float) Math.PI);
+            f2 = MathHelper.sin(-entity.rotationYaw * 0.017453292F - (float) Math.PI);
+            f3 = -MathHelper.cos(-entity.rotationPitch * 0.017453292F);
+            f4 = MathHelper.sin(-entity.rotationPitch * 0.017453292F);
+            return entity.worldObj.getWorldVec3Pool().getVecFromPool((double) (f2 * f3), (double) f4, (double) (f1 * f3));
+        }
+        else
+        {
+            f1 = entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * par1;
+            f2 = entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * par1;
+            f3 = MathHelper.cos(-f2 * 0.017453292F - (float) Math.PI);
+            f4 = MathHelper.sin(-f2 * 0.017453292F - (float) Math.PI);
+            float f5 = -MathHelper.cos(-f1 * 0.017453292F);
+            float f6 = MathHelper.sin(-f1 * 0.017453292F);
+            return entity.worldObj.getWorldVec3Pool().getVecFromPool((double) (f4 * f5), (double) f6, (double) (f3 * f5));
         }
     }
 }

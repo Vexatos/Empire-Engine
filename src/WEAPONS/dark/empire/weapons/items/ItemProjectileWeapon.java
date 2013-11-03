@@ -192,6 +192,11 @@ public class ItemProjectileWeapon extends ItemBasic
                     float par3 = (entityLiving.worldObj.rand.nextFloat() * (entityLiving.worldObj.rand.nextBoolean() ? -delta : delta));
                     float par5 = (entityLiving.worldObj.rand.nextFloat() * (entityLiving.worldObj.rand.nextBoolean() ? -delta : delta));
                     Vec3 e = new Vector3(par1, par3, par5).toVec3();
+                    Vec3 playerPosition = Vec3.createVectorHelper(entityLiving.posX, entityLiving.posY + entityLiving.getEyeHeight(), entityLiving.posZ);
+                    Vec3 playerLook = ProjectileWeaponManager.getLook(entityLiving, 1.0f);
+
+                    Vec3 playerViewOffset = Vec3.createVectorHelper(playerPosition.xCoord + playerLook.xCoord * weapon.range, playerPosition.yCoord + playerLook.yCoord * weapon.range + e.yCoord, playerPosition.zCoord + playerLook.zCoord * weapon.range + e.zCoord);
+
                     MovingObjectPosition hitMOP = ProjectileWeaponManager.ray_trace_do(entityLiving.worldObj, entityLiving, e, weapon.range, true);
                     entityLiving.worldObj.playSound(entityLiving.posX, entityLiving.posY, entityLiving.posZ, EmpireWeapons.instance.PREFIX + "shotgun2", 0.5f, 0.7f, true);
                     Vec3 lookVec = entityLiving.getLookVec();
@@ -207,7 +212,11 @@ public class ItemProjectileWeapon extends ItemBasic
                             }
                         }
                         Effects.drawParticleStreamTo(entityLiving, entityLiving.worldObj, hitMOP.hitVec.xCoord, hitMOP.hitVec.yCoord, hitMOP.hitVec.zCoord);
+                    }else
+                    {
+                        Effects.drawParticleStreamTo(entityLiving, entityLiving.worldObj, playerViewOffset.xCoord, playerViewOffset.yCoord, playerViewOffset.zCoord);
                     }
+
                 }
             }
             return true;
