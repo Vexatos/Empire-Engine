@@ -9,7 +9,9 @@ public enum AmmoType
     MEDIUM("medium"),
     HEAVY("heavy"),
     SHOTGUN("shotgun"),
-    ROCKET("rocket");
+    ROCKET("rocket"),
+    BATTERY("battery"),
+    CELL("cell");
     public final String name;
 
     private AmmoType(String name)

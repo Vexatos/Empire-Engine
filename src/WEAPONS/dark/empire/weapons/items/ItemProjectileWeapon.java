@@ -1,5 +1,6 @@
 package dark.empire.weapons.items;
 
+import java.awt.Color;
 import java.util.List;
 
 import net.minecraft.block.Block;
@@ -17,6 +18,7 @@ import net.minecraft.util.Icon;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
+import universalelectricity.core.item.IItemElectric;
 import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.Pair;
@@ -24,6 +26,7 @@ import com.builtbroken.common.Pair;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.client.Effects;
+import dark.core.common.DarkMain;
 import dark.core.prefab.ModPrefab;
 import dark.core.prefab.helpers.ItemWorldHelper;
 import dark.core.prefab.items.ItemBasic;
@@ -33,7 +36,7 @@ import dark.empire.weapons.EmpireWeapons;
 /** Basic Projectile weapon class that stores all the attributes of the weapon as NBT
  *
  * @author DarkGaurdsman */
-public class ItemProjectileWeapon extends ItemBasic
+public class ItemProjectileWeapon extends ItemBasic implements IItemElectric
 {
     public ItemProjectileWeapon()
     {
@@ -97,6 +100,20 @@ public class ItemProjectileWeapon extends ItemBasic
     public EnumAction getItemUseAction(ItemStack par1ItemStack)
     {
         return EnumAction.bow;
+    }
+
+    @Override
+    public void onCreated(ItemStack stack, World par2World, EntityPlayer entityPlayer)
+    {
+        this.setElectricity(stack, 0);
+        if (stack.getTagCompound() == null)
+        {
+            stack.setTagCompound(new NBTTagCompound());
+        }
+        if (entityPlayer != null)
+        {
+            stack.getTagCompound().setString("Creator", entityPlayer.username);
+        }
     }
 
     public static ItemStack createNewWeapon(String creator, ProjectileWeapon weapon, ItemStack stack)
@@ -173,7 +190,7 @@ public class ItemProjectileWeapon extends ItemBasic
                 bullet = ((IBullet) bullet_item.right().getItem()).getBullet(bullet_item.right());
                 shell = ((IBullet) bullet_item.right().getItem()).getShell(bullet_item.right());
             }
-            if (weapon != null && (dontConsumeAmmo || bullet_item != null) && !weapon.onFired(entityLiving, bullet))
+            if (weapon != null && (dontConsumeAmmo || bullet_item != null || weapon.type == AmmoType.BATTERY && this.getElectricityStored(stack) > 10) && !weapon.onFired(entityLiving, bullet))
             {
                 if (bullet_item != null && !dontConsumeAmmo)
                 {
@@ -183,6 +200,10 @@ public class ItemProjectileWeapon extends ItemBasic
                     }
                     ((EntityPlayer) entityLiving).inventory.decrStackSize(bullet_item.left(), 1);
 
+                }
+                if (weapon.type == AmmoType.BATTERY && !dontConsumeAmmo)
+                {
+                    this.discharge(stack, Guns.get(stack.getItemDamage()).costAShot, true);
                 }
                 for (int i = 0; i < bullet.rounds; i++)
                 {
@@ -194,27 +215,33 @@ public class ItemProjectileWeapon extends ItemBasic
                     Vec3 e = new Vector3(par1, par3, par5).toVec3();
                     Vec3 playerPosition = Vec3.createVectorHelper(entityLiving.posX, entityLiving.posY + entityLiving.getEyeHeight(), entityLiving.posZ);
                     Vec3 playerLook = ProjectileWeaponManager.getLook(entityLiving, 1.0f);
+                    Vec3 p = Vec3.createVectorHelper(playerPosition.xCoord + playerLook.xCoord * 2, playerPosition.yCoord + playerLook.yCoord * 2, playerPosition.zCoord + playerLook.zCoord * 2);
 
                     Vec3 playerViewOffset = Vec3.createVectorHelper(playerPosition.xCoord + playerLook.xCoord * weapon.range, playerPosition.yCoord + playerLook.yCoord * weapon.range + e.yCoord, playerPosition.zCoord + playerLook.zCoord * weapon.range + e.zCoord);
 
-                    MovingObjectPosition hitMOP = ProjectileWeaponManager.ray_trace_do(entityLiving.worldObj, entityLiving, e, weapon.range, true);
+                    MovingObjectPosition hit = ProjectileWeaponManager.ray_trace_do(entityLiving.worldObj, entityLiving, e, weapon.range, true);
                     entityLiving.worldObj.playSound(entityLiving.posX, entityLiving.posY, entityLiving.posZ, EmpireWeapons.instance.PREFIX + "shotgun2", 0.5f, 0.7f, true);
                     Vec3 lookVec = entityLiving.getLookVec();
-                    if (hitMOP != null)
+                    if (hit != null)
                     {
-                        if (hitMOP.entityHit != null)
+                        if (hit.entityHit != null)
                         {
                             DamageSource damageSource = DamageSource.causePlayerDamage((EntityPlayer) entityLiving);
-                            if (hitMOP.entityHit.attackEntityFrom(damageSource, damage))
+                            if (hit.entityHit.attackEntityFrom(damageSource, damage))
                             {
-                                bullet.onImpact(hitMOP.entityHit);
-                                hitMOP.entityHit.addVelocity(lookVec.xCoord * 0.2, 0, lookVec.zCoord * 0.2);
+                                bullet.onImpact(hit.entityHit);
+                                hit.entityHit.addVelocity(lookVec.xCoord * 0.2, 0, lookVec.zCoord * 0.2);
                             }
                         }
-                        Effects.drawParticleStreamTo(entityLiving, entityLiving.worldObj, hitMOP.hitVec.xCoord, hitMOP.hitVec.yCoord, hitMOP.hitVec.zCoord);
-                    }else
+                        playerViewOffset = hit.hitVec;
+                    }
+                    if (Guns.get(stack.getItemDamage()) != Guns.LaserRifle)
                     {
                         Effects.drawParticleStreamTo(entityLiving, entityLiving.worldObj, playerViewOffset.xCoord, playerViewOffset.yCoord, playerViewOffset.zCoord);
+                    }
+                    else
+                    {
+                        DarkMain.getInstance().proxy.renderBeam(entityLiving.worldObj, new Vector3(p).translate(new Vector3(0, -.4, 0)), new Vector3(playerViewOffset), Color.RED, 2);
                     }
 
                 }
@@ -256,6 +283,13 @@ public class ItemProjectileWeapon extends ItemBasic
         for (Guns gun : Guns.values())
         {
             par3List.add(ItemProjectileWeapon.createNewWeapon("creative", gun.weapon, new ItemStack(this, 1, gun.ordinal())));
+            if (gun.weapon.type == AmmoType.BATTERY)
+            {
+                ItemStack stack = new ItemStack(this, 1, gun.ordinal());
+                this.setElectricity(stack, Guns.get(stack.getItemDamage()).battery);
+                par3List.add(ItemProjectileWeapon.createNewWeapon("creative", gun.weapon, stack));
+
+            }
         }
     }
 
@@ -265,17 +299,131 @@ public class ItemProjectileWeapon extends ItemBasic
         return this.getUnlocalizedName() + "." + par1ItemStack.getItemDamage();
     }
 
+    @Override
+    public float recharge(ItemStack itemStack, float energy, boolean doReceive)
+    {
+        ProjectileWeapon weapon = Guns.get(itemStack.getItemDamage()).weapon;
+        if (weapon != null && weapon.type == AmmoType.BATTERY)
+        {
+            float rejectedElectricity = Math.max((this.getElectricityStored(itemStack) + energy) - this.getMaxElectricityStored(itemStack), 0);
+            float energyToReceive = energy - rejectedElectricity;
+
+            if (doReceive)
+            {
+                this.setElectricity(itemStack, this.getElectricityStored(itemStack) + energyToReceive);
+            }
+
+            return energyToReceive;
+        }
+        return 0;
+    }
+
+    @Override
+    public float discharge(ItemStack itemStack, float energy, boolean doDischarge)
+    {
+        ProjectileWeapon weapon = Guns.get(itemStack.getItemDamage()).weapon;
+        if (weapon != null && weapon.type == AmmoType.BATTERY)
+        {
+            float energyToTransfer = Math.min(this.getElectricityStored(itemStack), energy);
+
+            if (doDischarge)
+            {
+                this.setElectricity(itemStack, this.getElectricityStored(itemStack) - energyToTransfer);
+            }
+
+            return energyToTransfer;
+        }
+        return 0;
+    }
+
+    @Override
+    public float getElectricityStored(ItemStack itemStack)
+    {
+        ProjectileWeapon weapon = Guns.get(itemStack.getItemDamage()).weapon;
+        if (weapon != null && weapon.type == AmmoType.BATTERY)
+        {
+            if (itemStack.getTagCompound() == null)
+            {
+                itemStack.setTagCompound(new NBTTagCompound());
+            }
+
+            float electricityStored = itemStack.getTagCompound().getFloat("electricity");
+            return electricityStored;
+        }
+        return 0;
+    }
+
+    @Override
+    public float getMaxElectricityStored(ItemStack itemStack)
+    {
+        ProjectileWeapon weapon = Guns.get(itemStack.getItemDamage()).weapon;
+        if (weapon != null && weapon.type == AmmoType.BATTERY)
+        {
+            return Guns.get(itemStack.getItemDamage()).battery;
+        }
+        return 0;
+    }
+
+    @Override
+    public void setElectricity(ItemStack itemStack, float joules)
+    {
+        ProjectileWeapon weapon = Guns.get(itemStack.getItemDamage()).weapon;
+        if (weapon != null && weapon.type == AmmoType.BATTERY)
+        {
+            // Saves the frequency in the ItemStack
+            if (itemStack.getTagCompound() == null)
+            {
+                itemStack.setTagCompound(new NBTTagCompound());
+            }
+
+            float electricityStored = Math.max(Math.min(joules, this.getMaxElectricityStored(itemStack)), 0);
+            itemStack.getTagCompound().setFloat("electricity", electricityStored);
+        }
+
+    }
+
+    @Override
+    public float getTransfer(ItemStack itemStack)
+    {
+        ProjectileWeapon weapon = Guns.get(itemStack.getItemDamage()).weapon;
+        if (weapon != null && weapon.type == AmmoType.BATTERY)
+        {
+            return this.getMaxElectricityStored(itemStack) - this.getElectricityStored(itemStack);
+        }
+        return 0;
+    }
+
+    @Override
+    public float getVoltage(ItemStack itemStack)
+    {
+        ProjectileWeapon weapon = Guns.get(itemStack.getItemDamage()).weapon;
+        if (weapon != null && weapon.type == AmmoType.BATTERY)
+        {
+            return .120f;
+        }
+        return 0;
+    }
+
     /** Stores data about default meta value of the guns */
     public static enum Guns
     {
         HandGun(new ProjectileWeapon("HandGun", AmmoType.SMALL, 1, 40, 5, .01f).setMaxRange(500)),
         DBShotGun(new ProjectileWeapon("DBShotGun", AmmoType.SHOTGUN, 3, 31, 5, .01f).setMaxRange(600)),
-        PumpShotGun(new ProjectileWeapon("PumpShotGun", AmmoType.SHOTGUN, 2, 21, 25, .01f).setMaxRange(300));
+        PumpShotGun(new ProjectileWeapon("PumpShotGun", AmmoType.SHOTGUN, 2, 21, 25, .01f).setMaxRange(300)),
+        LaserRifle(new ProjectileWeapon("LaserRifle", AmmoType.BATTERY, 10, 21, 25, 0f).setMaxRange(700), 150, 1);
         ProjectileWeapon weapon;
+        int battery = 1000, costAShot = 10;
 
         private Guns(ProjectileWeapon weapon)
         {
             this.weapon = weapon;
+        }
+
+        private Guns(ProjectileWeapon weapon, int battery, int costAShot)
+        {
+            this(weapon);
+            this.battery = battery;
+            this.costAShot = costAShot;
         }
 
         public static Guns get(int itemDamage)
