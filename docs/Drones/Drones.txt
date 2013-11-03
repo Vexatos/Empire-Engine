@@ -1,0 +1,30 @@
+Robotic NPC package that adds a new race, items, blocks, and challanges to the mod set.
+
+Blocks
+Hive Decor - decoration blocks to give the impression of a living metal building
+Hive Sentries - Same as ICBM sentries but with unique looks and designs. Like the spike arm that shoots a metal tentical threw the air to attack the player
+Living wires - wires that spread like grass acrros the map but limited to 100 blocks from the hive spire.
+Data cache - contains data that the drones uses and can be hacked for all kinds of info including blue prints.
+
+Items
+Drone parts - wide range of parts that drop from dead drones, and can be used to make player versions of drones
+Drone laser gun - Most likely will be added to the weapons mod and then activated when both are installed. Its a gun that was part of a drone then turned into a weapon. 
+Drone spawn tool - debug creative mod only tool to spawn drones
+Drone beacon - comes in several forms but is used to call drones in. One version will cause a drone attack, another a drone shuttle, and another a cargo drone
+
+NPCs
+Drone - 4 legged spider drone that can be configured to do anything. Can be configured to fight.
+Contructor - Builder, can make drones, blocks, and create buildings. Has heavy fire power to defend itself
+Combat Rover  - two tracked rover that can be mounted with weapons
+Cube Drone - flying cube that has a laser eye for attack things. Comes with gravity beam to pickup things as well.
+Defender I - 4 legged drone with ball wheels at the end. Can move rather fast on flat land. Has heavily armored legs that can be formed into shield. Can be equiped with a wide range of firepower but generally has a machine gun and two missile packs
+Guardian - Very large version of the defender that protects the core of a hive spire. Comes with several missiles packs, lasers, and cannon arms. Is 20 blocks tall and can take down a player like a fly.
+Cargo Drone - large flat like flying drone that can carry 4 chests worth of cargo. Can be hacked or shot down by the player for loot.
+Shuttle Drone - picks up drones and moves them around. Can lift up to 6 normal drones, or 4 Defenders. 
+Collector - mass sorting drone that like to collect and place items in there place. Will aggresssivly steal items from the player if it gets near. 
+Worm - Small multi part worm like drone that digs wire & pipe tunnels
+Tunnel Spider - very big version of the basic drone that moves threw tunnels 
+World Eater - named for its size. Its a very large worm that can digg 10D tunnels threw the earth. Has a heavy sucksion beam to pull items, and entities into its mouth. 
+Core - AI cores are normally unmovable but some have developed themselves to fly around there data centers. Mostly they ignore the player but have sheilds and lasers to fight with. 
+Core Mother - An evolved version of a drone AI core that now is large and very mobile. Its 30 blocks in side and resembles a spide. can act like a constructor.
+ 

@@ -1,0 +1,16 @@
+Core is very basic only providing way to spawn NPCs and give them general tasks to do. Without village addon installed the NPCs will have no way to actually self create an empire.
+
+Blocks
+Hiring Sign - Player can use this to look for an NPC for a task. Its also were the player sets up the task that way if the NPC dies or quits another can continue without the player saying anything.
+Trading post - Works with a hiring sign to create a market booth for a trader
+Coin press - Turns metal blanks into coins of the players nation or allied nation
+
+
+
+NPC
+Worker - Does farming, mining, building, foresting, and about any general manual labor task
+Trader - Sells things for the player
+
+Items
+Contract - tempary NPC hiring to a set task for limited time frame. Is sold by trader NPCs.
+Coins - Money
