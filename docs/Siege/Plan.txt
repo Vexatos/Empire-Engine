@@ -1,0 +1,44 @@
+Expand on the idea of fighting a war and added a large amount of supporting content for ICBM. 
+
+Vechicals/WeaponPlatfroms
+catapult - throws rocks
+Roman catapult - throws rocks and arrows, looks like a raised Balista
+Balista - Shoots big arrows, can insta kill a player
+Trebuchet - longer range version of the catapult but harder to move
+Mortor - stationary weapon, can be picked up, shotos mortor shells
+Cannon
+45mm Arty - small stationary weapon
+105AT - anti tank gun
+125mm Arty
+150mm Arty
+250mm Arty
+Trab
+Jeep - classic post WW2 army jeep, 4 seats, and too scale
+Steam tank - late steam age version of a tank
+Tank - early tank that looks like WW1 tank
+Light tank - small early WW2 tank
+Armored Tank - WW2 tank
+Modern Tank - more modern tank that is a small version of the abrams
+Self Propeled Arty - several sizes. Tried by tech age
+Rocket Tank - Carries 4 Missiles from the ICBM mod, or Rockets from the this mod
+Rocket Battery Tank - 30 pack missile arty, designed for wide range attacks, take a long time to reload.
+
+
+Blocks
+Mobile HQ - HQ for commanding attacks and ordering in reinformance to the front line
+Vechical crafting table
+
+Items
+Rockets - Similar to ICBM missiles but more dummy fire, and cheaper
+Cannon Shell - shell for crafting cannon rounds
+Cannon Ball 
+Mortar Shell
+Mortar Round
+Armor Plating
+Gear box
+Tracks
+Steel beams
+Wheels
+
+
+
