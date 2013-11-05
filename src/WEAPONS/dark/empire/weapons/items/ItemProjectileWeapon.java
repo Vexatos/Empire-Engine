@@ -34,7 +34,7 @@ import dark.empire.api.weapons.IBullet;
 import dark.empire.weapons.EmpireWeapons;
 
 /** Basic Projectile weapon class that stores all the attributes of the weapon as NBT
- *
+ * 
  * @author DarkGaurdsman */
 public class ItemProjectileWeapon extends ItemBasic implements IItemElectric
 {
@@ -241,7 +241,8 @@ public class ItemProjectileWeapon extends ItemBasic implements IItemElectric
                     }
                     else
                     {
-                        DarkMain.getInstance().proxy.renderBeam(entityLiving.worldObj, new Vector3(p).translate(new Vector3(0, -.4, 0)), new Vector3(playerViewOffset), Color.RED, 2);
+                        DarkMain.getInstance();
+                        DarkMain.proxy.renderBeam(entityLiving.worldObj, new Vector3(p).translate(new Vector3(0, -.4, 0)), new Vector3(playerViewOffset), Color.RED, 2);
                     }
 
                 }

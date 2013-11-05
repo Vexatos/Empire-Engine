@@ -14,7 +14,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
 /** Registers and manages weapons plus upgrades
- *
+ * 
  * @author DarkGuardsman */
 public class ProjectileWeaponManager
 {
@@ -199,7 +199,7 @@ public class ProjectileWeaponManager
             f2 = MathHelper.sin(-entity.rotationYaw * 0.017453292F - (float) Math.PI);
             f3 = -MathHelper.cos(-entity.rotationPitch * 0.017453292F);
             f4 = MathHelper.sin(-entity.rotationPitch * 0.017453292F);
-            return entity.worldObj.getWorldVec3Pool().getVecFromPool((double) (f2 * f3), (double) f4, (double) (f1 * f3));
+            return entity.worldObj.getWorldVec3Pool().getVecFromPool((f2 * f3), f4, (f1 * f3));
         }
         else
         {
@@ -209,7 +209,7 @@ public class ProjectileWeaponManager
             f4 = MathHelper.sin(-f2 * 0.017453292F - (float) Math.PI);
             float f5 = -MathHelper.cos(-f1 * 0.017453292F);
             float f6 = MathHelper.sin(-f1 * 0.017453292F);
-            return entity.worldObj.getWorldVec3Pool().getVecFromPool((double) (f4 * f5), (double) f6, (double) (f3 * f5));
+            return entity.worldObj.getWorldVec3Pool().getVecFromPool((f4 * f5), f6, (f3 * f5));
         }
     }
 }

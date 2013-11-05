@@ -13,7 +13,7 @@ public class EmpireManager
     {
         if (!empireClasses.containsKey(id))
         {
-            empireClasses.put(id, ((Empire) empire.clone()));
+            empireClasses.put(id, empire.clone());
         }
     }
 }

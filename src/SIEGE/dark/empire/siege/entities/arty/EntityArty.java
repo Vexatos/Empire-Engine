@@ -15,6 +15,10 @@ public abstract class EntityArty extends Entity implements IExternalInv
 
     protected IInvBox inventory;
     protected String displayName = "Arty";
+    protected float damage = 0;
+    protected float maxDamage = 100;
+    protected float gunYaw, gunPitch, prevGunYaw, prevGunPitch;
+    protected float maxRotationSpeed = 5, maxGunRotationSpeed = 5;
 
     public EntityArty(World world)
     {
@@ -32,6 +36,26 @@ public abstract class EntityArty extends Entity implements IExternalInv
     {
         // TODO Auto-generated method stub
 
+    }
+
+    @Override
+    public void onEntityUpdate()
+    {
+        super.onEntityUpdate();
+        if (this.damage >= this.maxDamage)
+        {
+            //TODO if loaded with ammo do a small explosion with parts that fly out and do damage
+            //TODO drop some parts
+            this.setDead();
+        }
+        if (gunYaw != prevGunYaw)
+        {
+            //TODO start rotating the gun though most arties will not be able to rotate the gun yaw
+        }
+        else if (gunPitch != prevGunPitch)
+        {
+            //TODO rotate gun pitch after yaw for a smoother effect
+        }
     }
 
     @Override

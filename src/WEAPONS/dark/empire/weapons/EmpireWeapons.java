@@ -23,9 +23,9 @@ import dark.core.network.PacketHandler;
 import dark.core.prefab.ModPrefab;
 import dark.core.registration.ModObjectRegistry;
 import dark.empire.weapons.items.ItemBullet;
+import dark.empire.weapons.items.ItemBullet.BulletData;
 import dark.empire.weapons.items.ItemBullet.BulletTypes;
 import dark.empire.weapons.items.ItemProjectileWeapon;
-import dark.empire.weapons.items.ItemBullet.BulletData;
 
 @Mod(modid = EmpireWeapons.MOD_ID, name = EmpireWeapons.MOD_NAME, version = EmpireWeapons.VERSION, dependencies = "after:EmpireEngine", useMetadata = true)
 @NetworkMod(channels = { EmpireWeapons.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
@@ -88,7 +88,7 @@ public class EmpireWeapons extends ModPrefab
             {
                 for (BulletTypes type : BulletTypes.values())
                 {
-                    OreDictionary.registerOre("bullet."+data.name +"."+ type.name, new ItemStack(EWRecipeLoader.itemBullet,1,data.ordinal() * ItemBullet.spacing + type.ordinal()));
+                    OreDictionary.registerOre("bullet." + data.name + "." + type.name, new ItemStack(EWRecipeLoader.itemBullet, 1, data.ordinal() * ItemBullet.spacing + type.ordinal()));
                 }
             }
 
@@ -130,11 +130,11 @@ public class EmpireWeapons extends ModPrefab
     @Override
     public void registerObjects()
     {
-        this.CONFIGURATION.load();
+        EmpireWeapons.CONFIGURATION.load();
         EWRecipeLoader.instance();
         EWRecipeLoader.itemGun = ModObjectRegistry.createNewItem("EWItemGun", MOD_ID, ItemProjectileWeapon.class, true);
         EWRecipeLoader.itemBullet = ModObjectRegistry.createNewItem("EWItemBullet", MOD_ID, ItemBullet.class, true);
-        this.CONFIGURATION.save();
+        EmpireWeapons.CONFIGURATION.save();
 
     }
 

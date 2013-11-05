@@ -1,7 +1,6 @@
 package dark.empire.siege.entities.arty;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.IProjectile;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.world.World;
 

@@ -14,7 +14,7 @@ import dark.empire.api.weapons.IBullet;
 import dark.empire.weapons.EmpireWeapons;
 
 /** Class for bullets, clips, and ammo in general
- *
+ * 
  * @author DarkGuardsman */
 public class ItemBullet extends ItemBasic implements IBullet
 {
@@ -35,7 +35,7 @@ public class ItemBullet extends ItemBasic implements IBullet
         {
             for (BulletTypes type : BulletTypes.values())
             {
-                if (type != type.SHELL || type == type.SHELL && data.hasShell)
+                if (type != BulletTypes.SHELL || type == BulletTypes.SHELL && data.hasShell)
                 {
                     par3List.add(new ItemStack(this, 1, data.ordinal() * spacing + type.ordinal()));
                 }
@@ -129,7 +129,7 @@ public class ItemBullet extends ItemBasic implements IBullet
         public final AmmoType type;
         public Icon[] icons = new Icon[spacing];
         public Bullet[] bullets;
-        public final boolean  hasShell;
+        public final boolean hasShell;
 
         private BulletData(String name, AmmoType type, boolean shell, Bullet bullet)
         {

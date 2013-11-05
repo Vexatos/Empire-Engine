@@ -1,12 +1,11 @@
 package dark.empire.weapons;
 
-import cpw.mods.fml.common.registry.GameRegistry;
 import net.minecraft.block.Block;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
+import cpw.mods.fml.common.registry.GameRegistry;
 import dark.core.common.RecipeLoader;
-import dark.empire.weapons.items.ItemBullet;
 import dark.empire.weapons.items.ItemClip;
 import dark.empire.weapons.items.ItemProjectileWeapon;
 import dark.empire.weapons.items.ItemWeaponUpgrade;

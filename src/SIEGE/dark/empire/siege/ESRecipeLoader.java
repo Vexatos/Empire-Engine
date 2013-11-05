@@ -19,6 +19,6 @@ public class ESRecipeLoader extends RecipeLoader
     public void loadRecipes()
     {
         super.loadRecipes();
-      
+
     }
 }

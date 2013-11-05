@@ -109,8 +109,8 @@ public class EmpireSiege extends ModPrefab
     @Override
     public void registerObjects()
     {
-        this.CONFIGURATION.load();
-        this.CONFIGURATION.save();
+        EmpireSiege.CONFIGURATION.load();
+        EmpireSiege.CONFIGURATION.save();
 
     }
 
