@@ -1,4 +1,4 @@
-package dark.empire.siege;
+package dark.empire.drone;
 
 import java.io.File;
 import java.util.Arrays;
@@ -19,13 +19,11 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.ModPrefab;
-import dark.empire.drone.EDCommonProxy;
-import dark.empire.drone.EDRecipeLoader;
-import dark.empire.drone.EmpireDrone;
+import dark.empire.siege.EmpireSiege;
 
-@Mod(modid = EmpireSiege.MOD_ID, name = EmpireSiege.MOD_NAME, version = EmpireSiege.VERSION, dependencies = "after:EmpireEngine", useMetadata = true)
+@Mod(modid = EmpireDrone.MOD_ID, name = EmpireDrone.MOD_NAME, version = EmpireDrone.VERSION, dependencies = "after:EmpireEngine", useMetadata = true)
 @NetworkMod(clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
-public class EmpireSiege extends ModPrefab
+public class EmpireDrone extends ModPrefab
 {
 
     // @Mod Prerequisites
@@ -36,27 +34,27 @@ public class EmpireSiege extends ModPrefab
     public static final String VERSION = MAJOR_VERSION + "." + MINOR_VERSION + "." + REVIS_VERSION + "." + BUILD_VERSION;
 
     // @Mod
-    public static final String MOD_ID = "EmpireEngine:Siege";
-    public static final String MOD_NAME = "Empire Engine : Siege Package";
+    public static final String MOD_ID = "EmpireEngine:Drone";
+    public static final String MOD_NAME = "Empire Engine : Drone Package";
 
-    @SidedProxy(clientSide = "dark.empire.siege.client.ESClientProxy", serverSide = "dark.empire.siege.ESCommonProxy")
+    @SidedProxy(clientSide = "dark.empire.drone.client.EDClientProxy", serverSide = "dark.empire.drone.EDCommonProxy")
     public static EDCommonProxy proxy;
 
     @Metadata(MOD_ID)
     public static ModMetadata meta;
 
     @Instance(MOD_ID)
-    public static EmpireSiege instance;
+    public static EmpireDrone instance;
 
     /** Main config file */
-    public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), "EmpireEngine/Siege.cfg"));
+    public static final Configuration CONFIGURATION = new Configuration(new File(Loader.instance().getConfigDir(), "EmpireEngine/Drone.cfg"));
     private static final String[] LANGUAGES_SUPPORTED = new String[] { "en_US" };
 
-    public static EmpireSiege getInstance()
+    public static EmpireDrone getInstance()
     {
         if (instance == null)
         {
-            instance = new EmpireSiege();
+            instance = new EmpireDrone();
         }
         return instance;
     }
@@ -65,7 +63,7 @@ public class EmpireSiege extends ModPrefab
     @Override
     public void preInit(FMLPreInitializationEvent event)
     {
-        EmpireSiege.getInstance();
+        EmpireDrone.getInstance();
         super.preInit(event);
         proxy.preInit();
     }
@@ -98,7 +96,7 @@ public class EmpireSiege extends ModPrefab
     {
         meta.modId = MOD_ID;
         meta.name = MOD_NAME;
-        meta.description = "Siege package for Empire Engine provides a wide range of ways to destroy thy enemy within their safe walls.";
+        meta.description = "Drone package is an addon that adds an entire new race to the mod in the form of robotic entities. This includes dozen of drones, and more advanced AIs that are designed to target players.";
         meta.url = "http://www.builtbroken.com/empire-engine/";
 
         meta.logoFile = TEXTURE_DIRECTORY + "GP_Banner.png";
@@ -112,8 +110,8 @@ public class EmpireSiege extends ModPrefab
     @Override
     public void registerObjects()
     {
-        EmpireSiege.CONFIGURATION.load();
-        EmpireSiege.CONFIGURATION.save();
+        EmpireDrone.CONFIGURATION.load();
+        EmpireDrone.CONFIGURATION.save();
 
     }
 

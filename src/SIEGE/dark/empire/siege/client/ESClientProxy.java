@@ -1,8 +1,8 @@
 package dark.empire.siege.client;
 
-import dark.empire.siege.ESCommonProxy;
+import dark.empire.drone.EDCommonProxy;
 
-public class ESClientProxy extends ESCommonProxy
+public class ESClientProxy extends EDCommonProxy
 {
 
 }
