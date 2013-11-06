@@ -68,11 +68,11 @@ public class VillageManager implements IScheduledTickHandler
      * @param empire - optional, empire the village will be attached to
      * @param creator - what created the village, can be a player, the world, or an entity
      * @return new Village */
-    public static Village createNewVillage(String name, Empire empire, Object creator)
+    public static Village createNewVillage(World world, Vector3 location, String name, Empire empire, Object creator)
     {
         if (!villageToLocation.containsKey(name))
         {
-            Village village = new Village(name);
+            Village village = new Village(name, world, location);
             village.setEmpire(empire);
             return village;
         }

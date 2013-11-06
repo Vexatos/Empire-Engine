@@ -45,9 +45,10 @@ public class Village implements IVillage
 
     }
 
-    public Village(String name)
+    public Village(String name, World world, Vector3 center)
     {
         this.name = name;
+        this.villageCenter = new Pair<World, Vector3>(world, center);
     }
 
     /** Called when the village is created */
