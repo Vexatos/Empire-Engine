@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.Arrays;
 
 import net.minecraftforge.common.Configuration;
+import net.minecraftforge.common.MinecraftForge;
 import universalelectricity.prefab.TranslationHelper;
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
@@ -17,9 +18,11 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
+import cpw.mods.fml.common.registry.TickRegistry;
+import cpw.mods.fml.relauncher.Side;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.ModPrefab;
-import dark.empire.siege.EmpireSiege;
+import dark.empire.village.village.VillageManager;
 
 @Mod(modid = EmpireVillage.MOD_ID, name = EmpireVillage.MOD_NAME, version = EmpireVillage.VERSION, dependencies = "after:EmpireEngine", useMetadata = true)
 @NetworkMod(clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
@@ -65,6 +68,10 @@ public class EmpireVillage extends ModPrefab
     {
         EmpireVillage.getInstance();
         super.preInit(event);
+
+        MinecraftForge.EVENT_BUS.register(VillageManager.instance());
+        TickRegistry.registerTickHandler(VillageManager.instance(), Side.SERVER);
+
         proxy.preInit();
     }
 

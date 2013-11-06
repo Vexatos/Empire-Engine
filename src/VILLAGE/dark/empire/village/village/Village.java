@@ -169,7 +169,7 @@ public class Village implements IVillage
     {
         if (this.saveFile != null)
         {
-            this.saveFile = new File(NBTFileHelper.getWorldSaveDirectory(MinecraftServer.getServer().getFolderName()), VillageManager.VILLAGE_FILE + "village_" + name + "/village.dat");
+            this.saveFile = new File(NBTFileHelper.getWorldSaveDirectory(MinecraftServer.getServer().getFolderName()), VillageManager.VILLAGE_FILE + "/" + this.getLocation().left().provider.dimensionId + "/" + "village_" + name + "/village.dat");
         }
         return this.saveFile;
     }
