@@ -16,12 +16,22 @@ import dark.empire.core.entities.EntityNPC;
 
 public class Village implements IEmpireMember
 {
+    /** Empire this village is part of */
     private Empire empire;
-    private String name = "village";
+    /** Unique name of the village */
+    public String name = "village";
+    /** Size of the building from the center */
+    public int size = 100;
+    /** Location of the village */
     private Pair<World, Vector3> villageCenter;
+    /** NPCs that call this village home */
     protected List<EntityNPC> village_members = new ArrayList();
+    /** Should the village unload if the map area unloads */
     private boolean canUnload = true;
+    /** Used by the villageManager to check if this has anything new to save */
+    public boolean shouldSave = false;
 
+    /** Called when the village is created */
     public void init()
     {
         if (villageCenter != null && villageCenter.left() == null)
@@ -30,10 +40,20 @@ public class Village implements IEmpireMember
         }
     }
 
+    public Village()
+    {
+
+    }
+
+    public Village(String name)
+    {
+        this.name = name;
+    }
+
+    /** Called every few mins so the village has a chance to check on all of its content */
     public void update()
     {
-        //slow tick update that only checks for a few things that have changed then goes back to sleep
-        //Mainly is called when the village is unloaded from the map but still want to do a few things
+
     }
 
     /** Checks if the village wants to upload, is also checked in combination from the manager if the
