@@ -151,51 +151,48 @@ public class VillageManager implements IScheduledTickHandler
                 it.remove();
             }
         }
+        loadedVillages.put(dim, false);
+
     }
 
     /** Temp loads all the villages from file so the manager can record what villages exist */
     public static void preLoadVillagesFromWorld(int dim)
     {
-        File villageFolder = new File(NBTFileHelper.getWorldSaveDirectory(MinecraftServer.getServer().getFolderName()), VILLAGE_FILE + "/" + dim);
-        if (villageFolder.exists())
+        if (!loadedVillages.containsKey(dim) || !loadedVillages.get(dim))
         {
-            System.out.println("[VillageManager] Save folder exists");
-            System.out.println("[VillageManager] --Testing files");
-            for (File fileEntry : villageFolder.listFiles())
+            File villageFolder = new File(NBTFileHelper.getWorldSaveDirectory(MinecraftServer.getServer().getFolderName()), VILLAGE_FILE + "/" + dim);
+            if (villageFolder.exists())
             {
-                System.out.println("----" + fileEntry.getName());
-                if (fileEntry.isDirectory() && fileEntry.getName().startsWith("village"))
+                for (File fileEntry : villageFolder.listFiles())
                 {
-                    System.out.println("------Is village dir");
-                    for (File subFile : villageFolder.listFiles())
+                    if (fileEntry.isDirectory() && fileEntry.getName().startsWith("village"))
                     {
-                        System.out.println("--------" + fileEntry.getName());
-                        if (subFile.getName().equalsIgnoreCase("village.dat"))
+                        for (File subFile : fileEntry.listFiles())
                         {
-                            System.out.println("----------Is name correct");
-                            NBTTagCompound tag = NBTFileHelper.loadNBTFile(subFile, false);
-                            if (tag.hasKey("name"))
+                            if (subFile.getName().equalsIgnoreCase("village.dat"))
                             {
-                                System.out.println("----------Has Name Save");
-                                String name = tag.getString("name");
-                                Triple<Integer, Vector3, Integer> l = null;
-                                if (tag.hasKey("dim") && tag.hasKey("xCoord"))
+                                NBTTagCompound tag = NBTFileHelper.loadNBTFile(subFile, false);
+                                if (tag.hasKey("name"))
                                 {
-                                    System.out.println("----------Has Location Save");
-                                    l = new Triple<Integer, Vector3, Integer>(tag.getInteger("dim"), new Vector3(tag.getInteger("xCoord"), tag.getInteger("yCoord"), tag.getInteger("zCoord")), tag.getInteger("size"));
-
+                                    String name = tag.getString("name");
+                                    Triple<Integer, Vector3, Integer> l = null;
+                                    if (tag.hasKey("dim") && tag.hasKey("xCoord"))
+                                    {
+                                        l = new Triple<Integer, Vector3, Integer>(tag.getInteger("dim"), new Vector3(tag.getInteger("xCoord"), tag.getInteger("yCoord"), tag.getInteger("zCoord")), tag.getInteger("size"));
+                                    }
+                                    villageToLocation.put(name, l);
                                 }
-                                villageToLocation.put(name, l);
+                                break;
                             }
-                            break;
                         }
                     }
                 }
+                loadedVillages.put(dim, true);
             }
-        }
-        else
-        {
-            villageFolder.mkdirs();
+            else
+            {
+                villageFolder.mkdirs();
+            }
         }
     }
 
