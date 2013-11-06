@@ -14,7 +14,7 @@ import dark.empire.weapons.EWRecipeLoader;
 public class PlayerTickHandler implements ITickHandler
 {
 
-    List<String> players = new ArrayList();
+    List<String> players = new ArrayList<String>();
 
     public static PlayerTickHandler instance = new PlayerTickHandler();
 

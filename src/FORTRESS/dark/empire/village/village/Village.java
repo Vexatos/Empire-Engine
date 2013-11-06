@@ -20,8 +20,8 @@ public class Village implements IEmpireMember
     private Empire empire;
     /** Unique name of the village */
     public String name = "village";
-    /** Size of the building from the center */
-    public int size = 100;
+    /** Size of village in chunks radius from center chunk */
+    public int sizeInChunks = 20;
     /** Location of the village */
     private Pair<World, Vector3> villageCenter;
     /** NPCs that call this village home */
@@ -49,7 +49,7 @@ public class Village implements IEmpireMember
             //TODO set world using the dim ID
         }
         VillageManager.registerVillage(this);
-        if(empire != null)
+        if (empire != null)
         {
             //TODO register to empire and tell it this object is loaded
         }
@@ -65,7 +65,7 @@ public class Village implements IEmpireMember
 
     /** Checks if the village wants to upload, is also checked in combination from the manager if the
      * area of the map is loaded */
-    public boolean shouldUpload()
+    public boolean shouldUnload()
     {
         return this.canUnload && !this.isChunkLoader;
     }
