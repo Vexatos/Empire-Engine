@@ -27,18 +27,9 @@ public class Village implements IEmpireMember
     /** NPCs that call this village home */
     protected List<EntityNPC> village_members = new ArrayList();
     /** Should the village unload if the map area unloads */
-    private boolean canUnload = true;
+    private boolean canUnload = true, isChunkLoader = false;
     /** Used by the villageManager to check if this has anything new to save */
     public boolean shouldSave = false;
-
-    /** Called when the village is created */
-    public void init()
-    {
-        if (villageCenter != null && villageCenter.left() == null)
-        {
-            //TODO set world using the dim ID
-        }
-    }
 
     public Village()
     {
@@ -50,17 +41,33 @@ public class Village implements IEmpireMember
         this.name = name;
     }
 
+    /** Called when the village is created */
+    public void init()
+    {
+        if (villageCenter != null && villageCenter.left() == null)
+        {
+            //TODO set world using the dim ID
+        }
+        VillageManager.registerVillage(this);
+        if(empire != null)
+        {
+            //TODO register to empire and tell it this object is loaded
+        }
+    }
+
     /** Called every few mins so the village has a chance to check on all of its content */
     public void update()
     {
-
+        //TODO tick all buildings for updates
+        //TODO chunk buildings if #isChunkLoader is true
+        //TODO check if data has changed then set shouldSave to true
     }
 
     /** Checks if the village wants to upload, is also checked in combination from the manager if the
      * area of the map is loaded */
     public boolean shouldUpload()
     {
-        return this.canUnload;
+        return this.canUnload && !this.isChunkLoader;
     }
 
     @Override
@@ -130,6 +137,11 @@ public class Village implements IEmpireMember
     public boolean isValid()
     {
         return this.villageCenter != null && this.villageCenter.left() != null && this.villageCenter.right() != null;
+    }
+
+    public void inValidate()
+    {
+        //TODO loop threw all object that refrence this and tell them that the village is unloading
     }
 
 }

@@ -8,15 +8,16 @@ import java.util.Set;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.world.World;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent.Save;
 import universalelectricity.core.vector.Vector2;
+import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.common.IScheduledTickHandler;
 import cpw.mods.fml.common.TickType;
-
 import dark.core.prefab.helpers.NBTFileHelper;
 import dark.empire.core.empire.Empire;
 
@@ -61,6 +62,19 @@ public class VillageManager implements IScheduledTickHandler
         }
         return null;
 
+    }
+
+    public static void registerVillage(Village village)
+    {
+        if (!villages.contains(village))
+        {
+            villages.add(village);
+            Pair<World, Vector3> location = village.getLocation();
+            if (location != null && location.left() != null && location.right() != null)
+            {
+                villageToLocation.put(village.name, new Pair<Integer, Vector2>(location.left().provider.dimensionId, location.right().toVector2()));
+            }
+        }
     }
 
     /** Temp loads all the villages from file so the manager can record what villages exist */
@@ -111,9 +125,39 @@ public class VillageManager implements IScheduledTickHandler
         }
     }
 
-    public static void removeVillage(Village village)
+    /** Deletes the villages save folder, */
+    private static boolean deleteVillage(Village village)
     {
-        //TODO remove village from all maps and remove its save files from the save dir
+        if (village != null)
+        {
+            if (village.getEmpire() != null)
+            {
+                //TODO inform empire instance this village is no longer part of it
+            }
+        }
+        return false;
+    }
+
+    /** Removes the village from the map and unloads it from memory
+     *
+     * @param village - village
+     * @param delete - should we delte it save file
+     * @return true if nothing went wrong */
+    public static boolean removeVillage(Village village, boolean delete)
+    {
+        if (village != null)
+        {
+            //TODO check how tileEntities are removed
+            villages.remove(village);
+            village.inValidate();
+            if (delete && !deleteVillage(village))
+            {
+                return false;
+            }
+
+        }
+
+        return false;
     }
 
     @ForgeSubscribe
@@ -137,8 +181,42 @@ public class VillageManager implements IScheduledTickHandler
         }
         else if (type.equals(EnumSet.of(TickType.WORLD)) && this.loadedVillages)
         {
-
+            for (Village village : villages)
+            {
+                if (village.isValid())
+                {
+                    Pair<World, Vector3> location = village.getLocation();
+                    //TODO do repair check on village instance if world, or location comes back null
+                    if (location != null && location.left() != null && location.right() != null)
+                    {
+                        this.villageToLocation.put(village.name, new Pair<Integer, Vector2>(location.left().provider.dimensionId, location.right().toVector2()));
+                    }
+                    village.update();
+                    if (village.shouldUpload() && !isPartOfVillageLoaded(village))
+                    {
+                        //TODO save village to map then unload it from the world to save memory
+                    }
+                }
+                else
+                {
+                    //TODO process village for removal as its no longer valid
+                    //Though check for repair just in case the village instance can be saved
+                }
+            }
         }
+    }
+
+    /** Checks if part of the village is loaded
+     *
+     * @return true even if its only the very edge to preven issues of the center not getting loaded */
+    public boolean isPartOfVillageLoaded(Village village)
+    {
+        if (village != null)
+        {
+            //TODO check if chunks in the area of the village are loaded
+            return true;
+        }
+        return false;
     }
 
     @Override
