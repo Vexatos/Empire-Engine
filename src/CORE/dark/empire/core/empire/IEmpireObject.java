@@ -9,7 +9,7 @@ import com.builtbroken.common.Pair;
  * ect
  *
  * @author DarkGuardsman */
-public interface IEmpireMember
+public interface IEmpireObject
 {
     public Empire getEmpire();
 

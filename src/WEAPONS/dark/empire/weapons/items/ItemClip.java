@@ -3,8 +3,8 @@ package dark.empire.weapons.items;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
+import dark.core.prefab.ItemBasic;
 import dark.core.prefab.ModPrefab;
-import dark.core.prefab.items.ItemBasic;
 import dark.empire.weapons.EmpireWeapons;
 
 public class ItemClip extends ItemBasic

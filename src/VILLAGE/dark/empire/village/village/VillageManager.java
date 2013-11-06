@@ -22,7 +22,9 @@ import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.common.IScheduledTickHandler;
 import cpw.mods.fml.common.TickType;
-import dark.core.prefab.helpers.NBTFileHelper;
+import dark.core.save.NBTFileHelper;
+import dark.core.save.SaveManager;
+import dark.empire.api.village.IVillage;
 import dark.empire.core.empire.Empire;
 
 /** Manages the functionality of the villages
@@ -30,8 +32,6 @@ import dark.empire.core.empire.Empire;
  * @author Darkguardsman */
 public class VillageManager implements IScheduledTickHandler
 {
-    /** Map of villages to thier save names on file */
-    private static HashMap<String, String> villageToSaveName = new HashMap();
     /** Map of village to their locations (dimID, XY coor) used to load and unload villages */
     private static HashMap<String, Pair<Integer, Vector2>> villageToLocation = new HashMap();
     private static Set<Village> villages = new HashSet<Village>();
@@ -43,6 +43,11 @@ public class VillageManager implements IScheduledTickHandler
     private static boolean loadedVillages = false, isLoadingVillages = false;
 
     private static VillageManager instance;
+
+    static
+    {
+        SaveManager.registerClass("BaseVillage", Village.class);
+    }
 
     public static VillageManager instance()
     {
@@ -61,9 +66,10 @@ public class VillageManager implements IScheduledTickHandler
      * @return new Village */
     public static Village createNewVillage(String name, Empire empire, Object creator)
     {
-        Village village = new Village();
-        if (!villageToSaveName.containsKey(name))
+        if (!villageToLocation.containsKey(name))
         {
+            Village village = new Village(name);
+            village.setEmpire(empire);
             return village;
         }
         return null;
@@ -93,42 +99,22 @@ public class VillageManager implements IScheduledTickHandler
     /** Loads a village from the save folder
      *
      * @param name - unique name of the village */
-    public static Village loadVillage(String name)
+    public static IVillage loadVillage(String name)
     {
-        if (villageToSaveName.containsKey(name))
+        if (villageToLocation.containsKey(name))
         {
-            Village village = new Village();
-            NBTTagCompound tag = NBTFileHelper.loadNBTFile(new File(NBTFileHelper.getWorldSaveDirectory(MinecraftServer.getServer().getFolderName()), VILLAGE_FILE + name), "village", false);
-            if (tag != null && !tag.hasNoTags())
+            File file = new File(NBTFileHelper.getWorldSaveDirectory(MinecraftServer.getServer().getFolderName()), VILLAGE_FILE + name);
+            if (file.exists())
             {
-                village.load(tag);
+                Object object = SaveManager.createAndLoad(new File(file, "village.dat"));
+                if (object instanceof IVillage)
+                {
+                    ((IVillage) object).init();
+                    return (IVillage) object;
+                }
             }
         }
-
         return null;
-    }
-
-    /** Saves a village to the save folder */
-    public static void saveVillage(Village village)
-    {
-        if (village != null)
-        {
-            NBTTagCompound tag = new NBTTagCompound();
-            village.save(tag);
-            File villageFolder = new File(NBTFileHelper.getWorldSaveDirectory(MinecraftServer.getServer().getFolderName()), VILLAGE_FILE + village.name);
-            File buildingFolder = new File(villageFolder, "buildings");
-            if (!villageFolder.exists())
-            {
-                villageFolder.mkdirs();
-            }
-            if (!buildingFolder.exists())
-            {
-                buildingFolder.mkdirs();
-            }
-            //Save village file
-            NBTFileHelper.saveNBTFile(new File(villageFolder, "village"), tag);
-            //TODO save buildings
-        }
     }
 
     /** Deletes the villages save folder, */
@@ -136,10 +122,9 @@ public class VillageManager implements IScheduledTickHandler
     {
         if (village != null)
         {
-            if (village.getEmpire() != null)
-            {
-                //TODO inform empire instance this village is no longer part of it
-            }
+            File file = village.getSaveFile();
+            village.inValidate();
+            return !file.exists() || file.delete();
         }
         return false;
     }
@@ -154,31 +139,16 @@ public class VillageManager implements IScheduledTickHandler
         if (village != null)
         {
             //TODO check how tileEntities are removed
+            SaveManager.saveObject(village);
             villages.remove(village);
-            village.inValidate();
+            village.onUnload();
             if (delete && !deleteVillage(village))
             {
                 return false;
             }
-
+            return true;
         }
-
         return false;
-    }
-
-    @ForgeSubscribe
-    public void worldSave(WorldEvent evt)
-    {
-        for (Village village : villages)
-        {
-            if (evt instanceof Save)
-            {
-                if (village.isValid() && village.shouldSave)
-                {
-                    saveVillage(village);
-                }
-            }
-        }
     }
 
     @Override
@@ -186,27 +156,40 @@ public class VillageManager implements IScheduledTickHandler
     {
         if (type.equals(EnumSet.of(TickType.WORLDLOAD)) && !isLoadingVillages)
         {
+            if(VillageManager.loadedVillages)
+            {
+                //Everything should have been saved before the game goes to main screen and the next map is loaded.
+                for(Village village : villages)
+                {
+                    village.onUnload();
+                    village.inValidate();
+                }
+                villages.clear();
+                villageToLocation.clear();
+                unloadList.clear();
+                System.gc();
+            }
             preLoadVillagesFromWorld();
         }
-        else if (type.equals(EnumSet.of(TickType.WORLD)) && this.loadedVillages)
+        else if (type.equals(EnumSet.of(TickType.SERVER)) && VillageManager.loadedVillages)
         {
             Iterator<Village> it = villages.iterator();
             while (it.hasNext())
             {
                 Village village = it.next();
+                Pair<World, Vector3> location = village.getLocation();
                 if (village.isValid())
                 {
-                    Pair<World, Vector3> location = village.getLocation();
-                    //TODO do repair check on village instance if world, or location comes back null
-                    if (location != null && location.left() != null && location.right() != null)
-                    {
-                        this.villageToLocation.put(village.name, new Pair<Integer, Vector2>(location.left().provider.dimensionId, location.right().toVector2()));
-                    }
+                    VillageManager.villageToLocation.put(village.name, new Pair<Integer, Vector2>(location.left().provider.dimensionId, location.right().toVector2()));
                     village.update();
                     if (village.shouldUnload() && !isPartOfVillageLoaded(village))
                     {
-                        unloadList.put(village, 0);
+                        VillageManager.unloadList.put(village, 0);
                         it.remove();
+                    }
+                    else if (village.shouldSave)
+                    {
+                        SaveManager.markNeedsSaved(village);
                     }
                 }
                 else
@@ -266,7 +249,7 @@ public class VillageManager implements IScheduledTickHandler
             }
             else if (entry.getValue() >= 5)
             {
-                this.removeVillage(entry.getKey(), false);
+                VillageManager.removeVillage(entry.getKey(), false);
             }
             else
             {
@@ -283,7 +266,7 @@ public class VillageManager implements IScheduledTickHandler
         {
             return EnumSet.of(TickType.WORLDLOAD);
         }
-        return EnumSet.of(TickType.WORLD);
+        return EnumSet.of(TickType.SERVER);
     }
 
     @Override

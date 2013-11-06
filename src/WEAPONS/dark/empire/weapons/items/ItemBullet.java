@@ -8,8 +8,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
+import dark.core.prefab.ItemBasic;
 import dark.core.prefab.ModPrefab;
-import dark.core.prefab.items.ItemBasic;
 import dark.empire.api.weapons.IBullet;
 import dark.empire.weapons.EmpireWeapons;
 

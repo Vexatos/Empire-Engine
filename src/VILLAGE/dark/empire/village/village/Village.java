@@ -1,35 +1,44 @@
 package dark.empire.village.village;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
 import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.Pair;
 
+import dark.core.save.NBTFileHelper;
+import dark.empire.api.village.IVillage;
 import dark.empire.core.empire.Empire;
-import dark.empire.core.empire.IEmpireMember;
 import dark.empire.core.entities.EntityNPC;
 
-public class Village implements IEmpireMember
+/** Virtual entity that control all aspect of the physical village in the world. Mainly its only used
+ * to store information and process NPC events
+ *
+ * @author DarkGuardsman */
+public class Village implements IVillage
 {
     /** Empire this village is part of */
     private Empire empire;
     /** Unique name of the village */
     public String name = "village";
+    /** What created the village */
+    public String creator = "world";
     /** Size of village in chunks radius from center chunk */
     public int sizeInChunks = 20;
     /** Location of the village */
     private Pair<World, Vector3> villageCenter;
-    /** NPCs that call this village home */
-    protected List<EntityNPC> village_members = new ArrayList();
     /** Should the village unload if the map area unloads */
     private boolean canUnload = true, isChunkLoader = false;
     /** Used by the villageManager to check if this has anything new to save */
     public boolean shouldSave = false;
+
+    private File saveFile;
 
     public Village()
     {
@@ -44,14 +53,10 @@ public class Village implements IEmpireMember
     /** Called when the village is created */
     public void init()
     {
-        if (villageCenter != null && villageCenter.left() == null)
-        {
-            //TODO set world using the dim ID
-        }
         VillageManager.registerVillage(this);
         if (empire != null)
         {
-            //TODO register to empire and tell it this object is loaded
+            empire.registerMember(this);
         }
     }
 
@@ -139,9 +144,39 @@ public class Village implements IEmpireMember
         return this.villageCenter != null && this.villageCenter.left() != null && this.villageCenter.right() != null;
     }
 
+    /** Called when the village is deleted */
     public void inValidate()
     {
-        //TODO loop threw all object that refrence this and tell them that the village is unloading
+        //TODO loop threw all object that reference this and tell them that the village is unloading
+        if (empire != null)
+        {
+            empire.unregisterMember(this);
+            this.empire = null;
+        }
+
+    }
+
+    /** Called when the village is unloaded from the map */
+    public void onUnload()
+    {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public File getSaveFile()
+    {
+        if (this.saveFile != null)
+        {
+            this.saveFile = new File(NBTFileHelper.getWorldSaveDirectory(MinecraftServer.getServer().getFolderName()), VillageManager.VILLAGE_FILE + name + "/village.dat");
+        }
+        return this.saveFile;
+    }
+
+    @Override
+    public void setSaveFile(File file)
+    {
+        this.saveFile = file;
     }
 
 }

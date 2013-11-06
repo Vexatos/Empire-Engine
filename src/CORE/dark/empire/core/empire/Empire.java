@@ -19,7 +19,7 @@ public class Empire implements ISpecialAccess, Cloneable
     /** ID used by the game to track this empire. Normaly is a short version of the display name */
     private String id = "Empire";
     /** Set containing all parts the empire */
-    private Set<IEmpireMember> empireParts = new HashSet();
+    private Set<IEmpireObject> empireParts = new HashSet();
 
     private List<AccessGroup> groups = new ArrayList();
 
@@ -27,6 +27,16 @@ public class Empire implements ISpecialAccess, Cloneable
     {
         this.displayName = name;
         TerminalCommandRegistry.loadNewGroupSet(this);
+    }
+
+    public void registerMember(IEmpireObject object)
+    {
+
+    }
+
+    public void unregisterMember(IEmpireObject object)
+    {
+
     }
 
     @Override
