@@ -14,6 +14,7 @@ import com.builtbroken.common.Pair;
 
 import dark.core.save.NBTFileHelper;
 import dark.empire.api.village.IVillage;
+import dark.empire.api.village.IVillageObject;
 import dark.empire.core.empire.Empire;
 import dark.empire.core.entities.EntityNPC;
 
@@ -114,6 +115,7 @@ public class Village implements IVillage
     public void load(NBTTagCompound nbt)
     {
         this.name = nbt.getString("name");
+        this.sizeInChunks = nbt.getInteger("size");
         this.villageCenter = new Pair<World, Vector3>(WorldProvider.getProviderForDimension(nbt.getInteger("dim")).worldObj, new Vector3(nbt.getInteger("xCoord"), nbt.getInteger("yCoord"), nbt.getInteger("zCoord")));
 
     }
@@ -121,6 +123,7 @@ public class Village implements IVillage
     public void save(NBTTagCompound nbt)
     {
         nbt.setString("name", this.name);
+        nbt.setInteger("size", this.sizeInChunks);
         if (this.villageCenter != null)
         {
             if (this.villageCenter.right() != null)
@@ -160,14 +163,16 @@ public class Village implements IVillage
     /** Called when the village is unloaded from the map */
     public void onUnload()
     {
-        // TODO Auto-generated method stub
-
+        if (this.empire != null)
+        {
+            empire.onMemberUnloaded(this);
+        }
     }
 
     @Override
     public File getSaveFile()
     {
-        if (this.saveFile != null)
+        if (this.saveFile == null && this.getLocation() != null && this.getLocation().left() != null)
         {
             this.saveFile = new File(NBTFileHelper.getWorldSaveDirectory(MinecraftServer.getServer().getFolderName()), VillageManager.VILLAGE_FILE + "/" + this.getLocation().left().provider.dimensionId + "/" + "village_" + name + "/village.dat");
         }
@@ -178,6 +183,20 @@ public class Village implements IVillage
     public void setSaveFile(File file)
     {
         this.saveFile = file;
+    }
+
+    @Override
+    public void registerVillageObject(IVillageObject object)
+    {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void unregisterVillageObject(IVillageObject object)
+    {
+        // TODO Auto-generated method stub
+
     }
 
 }

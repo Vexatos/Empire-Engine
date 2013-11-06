@@ -15,6 +15,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.chunk.Chunk;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;
 import net.minecraftforge.event.world.WorldEvent.Load;
@@ -75,7 +76,14 @@ public class VillageManager implements IScheduledTickHandler
         if (!villageToLocation.containsKey(name))
         {
             Village village = new Village(name, world, location);
-            village.setEmpire(empire);
+
+            village.init();
+            registerVillage(village);
+            if (empire != null)
+            {
+                village.setEmpire(empire);
+                empire.registerMember(village);
+            }
             return village;
         }
         return null;
@@ -100,9 +108,9 @@ public class VillageManager implements IScheduledTickHandler
     {
         int dim = event.world.provider.dimensionId;
 
-        System.out.println("[VillageManager] loading villages from world " + dim);
-
-        if (loadedVillages.get(dim))
+        System.out.println("[VillageManager] loading villages from dim " + dim);
+        //Refresh the list if the world decides to reload when it was already loaded
+        if (loadedVillages.containsKey(dim) && loadedVillages.get(dim))
         {
             for (Village village : villages)
             {
@@ -121,7 +129,7 @@ public class VillageManager implements IScheduledTickHandler
     public void onWorldunLoad(WorldEvent.Unload event)
     {
         int dim = event.world.provider.dimensionId;
-
+        System.out.println("[VillageManager] unloading villages from dim " + dim);
         Iterator<Village> it = villages.iterator();
 
         while (it.hasNext())
@@ -132,6 +140,7 @@ public class VillageManager implements IScheduledTickHandler
             {
                 if (location.left().provider.dimensionId == dim)
                 {
+                    SaveManager.saveObject(village);
                     unloadList.put(village, 0);
                     it.remove();
                 }
@@ -147,13 +156,11 @@ public class VillageManager implements IScheduledTickHandler
     /** Temp loads all the villages from file so the manager can record what villages exist */
     public static void preLoadVillagesFromWorld(int dim)
     {
-        System.out.println("[VillageManager] Pre loading villages from save folder");
-
         File villageFolder = new File(NBTFileHelper.getWorldSaveDirectory(MinecraftServer.getServer().getFolderName()), VILLAGE_FILE + "/" + dim);
         if (villageFolder.exists())
         {
             System.out.println("[VillageManager] Save folder exists");
-            System.out.println("[VillageManager] Testing files");
+            System.out.println("[VillageManager] --Testing files");
             for (File fileEntry : villageFolder.listFiles())
             {
                 System.out.println("----" + fileEntry.getName());
@@ -220,9 +227,13 @@ public class VillageManager implements IScheduledTickHandler
         {
             System.out.println("[VillageManager] Delted village " + village.name);
             File file = village.getSaveFile();
+
             village.inValidate();
             villageToLocation.remove(village);
-            return !file.exists() || file.delete();
+            if (file != null)
+            {
+                return !file.exists() || file.delete();
+            }
         }
         return false;
     }
@@ -250,11 +261,20 @@ public class VillageManager implements IScheduledTickHandler
         return false;
     }
 
+    Village vill;
+
     @Override
     public void tickStart(EnumSet<TickType> type, Object... tickData)
     {
         System.out.println("[VillageManager] 'test' tick");
-        createNewVillage(WorldProvider.getProviderForDimension(0).worldObj, new Vector3(), "DebugTest", null, "Manager:Manager");
+        if (!villageToLocation.containsKey("DebugTest"))
+        {
+            vill = createNewVillage(DimensionManager.getWorld(0), new Vector3(0, 100, 0), "DebugTest", null, "Manager:Manager");
+        }
+        else if (vill != null)
+        {
+            SaveManager.saveObject(vill);
+        }
 
         if (type.equals(EnumSet.of(TickType.SERVER)))
         {

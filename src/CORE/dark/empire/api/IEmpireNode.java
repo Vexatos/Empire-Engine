@@ -1,19 +1,17 @@
-package dark.empire.core.empire;
+package dark.empire.api;
 
 import net.minecraft.world.World;
 import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.Pair;
 
+import dark.empire.core.empire.Empire;
+
 /** Nodes that are part of the empire like fortresses, villages, forwards bases, houses, building,
  * ect
  *
  * @author DarkGuardsman */
-public interface IEmpireObject
+public interface IEmpireNode extends IEmpireObject
 {
-    public Empire getEmpire();
-
-    public void setEmpire(Empire empire);
-
     public Pair<World, Vector3> getLocation();
 }

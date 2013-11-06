@@ -70,7 +70,7 @@ public class EmpireVillage extends ModPrefab
         super.preInit(event);
 
         MinecraftForge.EVENT_BUS.register(VillageManager.instance());
-        TickRegistry.registerTickHandler(VillageManager.instance(), Side.SERVER);
+        TickRegistry.registerScheduledTickHandler(VillageManager.instance(), Side.SERVER);
 
         proxy.preInit();
     }

@@ -1,5 +1,6 @@
 package dark.empire.core.empire;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -7,21 +8,23 @@ import java.util.Set;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
+import dark.api.IVirtualObject;
 import dark.api.access.AccessGroup;
 import dark.api.access.AccessUser;
 import dark.api.access.ISpecialAccess;
 import dark.core.prefab.terminal.TerminalCommandRegistry;
+import dark.empire.api.IEmpireNode;
 
-public class Empire implements ISpecialAccess, Cloneable
+public class Empire implements ISpecialAccess, Cloneable, IVirtualObject
 {
     /** Name the player sees */
     private String displayName = "Empire";
     /** ID used by the game to track this empire. Normaly is a short version of the display name */
     private String id = "Empire";
     /** Set containing all parts the empire */
-    private Set<IEmpireObject> empireParts = new HashSet();
+    private Set<IEmpireNode> empireParts = new HashSet<IEmpireNode>();
 
-    private List<AccessGroup> groups = new ArrayList();
+    private List<AccessGroup> groups = new ArrayList<AccessGroup>();
 
     public Empire(String name)
     {
@@ -29,13 +32,27 @@ public class Empire implements ISpecialAccess, Cloneable
         TerminalCommandRegistry.loadNewGroupSet(this);
     }
 
-    public void registerMember(IEmpireObject object)
+    public String getID()
+    {
+        return this.id;
+    }
+
+    /** Should be called when an object is created that is linked to this empire */
+    public void registerMember(IEmpireNode object)
+    {
+        //TODO add to a list so the empire has a static list of its memebers
+    }
+
+    /** Should be called when an object is destroyed and no longer exits */
+    public void unregisterMember(IEmpireNode object)
     {
 
     }
 
-    public void unregisterMember(IEmpireObject object)
+    /** Called when the object unloads from the map */
+    public void onMemberUnloaded(IEmpireNode village)
     {
+        //TODO unload the memeber for the empires active list but maintain its record the the object exists
 
     }
 
@@ -144,18 +161,39 @@ public class Empire implements ISpecialAccess, Cloneable
 
     public void readFromNBT(NBTTagCompound nbt)
     {
-        NBTTagList userList = nbt.getTagList("groups");
-        for (int i = 0; i < userList.tagCount(); i++)
-        {
-            AccessGroup group = new AccessGroup("");
-            group.load((NBTTagCompound) userList.tagAt(i));
-            this.groups.add(group);
-        }
+
     }
 
     public void writeToNBT(NBTTagCompound nbt)
     {
-        // Write user list
+
+    }
+
+    @Override
+    public Empire clone()
+    {
+        return new Empire(this.displayName);
+    }
+
+    @Override
+    public File getSaveFile()
+    {
+        return null;
+    }
+
+    @Override
+    public void setSaveFile(File file)
+    {
+        // TODO Auto-generated method stub
+
+    }
+
+    @Override
+    public void save(NBTTagCompound nbt)
+    {
+        nbt.setString("empireID", this.id);
+        nbt.setString("displayName", this.displayName);
+        // Write user list to save
         NBTTagList usersTag = new NBTTagList();
         for (AccessGroup group : this.groups)
         {
@@ -165,8 +203,19 @@ public class Empire implements ISpecialAccess, Cloneable
     }
 
     @Override
-    public Empire clone()
+    public void load(NBTTagCompound nbt)
     {
-        return new Empire(this.displayName);
+        this.id = nbt.getString("empireID");
+        this.displayName = nbt.getString("displayName");
+        //Read users from save
+        NBTTagList userList = nbt.getTagList("groups");
+        for (int i = 0; i < userList.tagCount(); i++)
+        {
+            AccessGroup group = new AccessGroup("");
+            group.load((NBTTagCompound) userList.tagAt(i));
+            this.groups.add(group);
+        }
+
     }
+
 }
