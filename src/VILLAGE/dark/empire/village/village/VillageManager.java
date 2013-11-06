@@ -240,7 +240,9 @@ public class VillageManager implements IScheduledTickHandler
                         Chunk chunk = world.getChunkFromChunkCoords(x, z);
                         if (chunk != null && chunk.isChunkLoaded)
                         {
-                            //TODO check if the village has anything loaded in the chunk
+                            /* TODO check if the village has anything loaded in the chunk, to decrease the village
+                             * having to be loaded if too far from the player. Should allow for chunkloading to happen
+                             * without the village existing */
                             return true;
                         }
                     }
