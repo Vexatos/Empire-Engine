@@ -7,13 +7,13 @@ import com.builtbroken.common.Pair;
 
 /** Nodes that are part of the empire like fortresses, villages, forwards bases, houses, building,
  * ect
- * 
+ *
  * @author DarkGuardsman */
 public interface IEmpireMember
 {
     public Empire getEmpire();
 
-    public void setEmpire();
+    public void setEmpire(Empire empire);
 
     public Pair<World, Vector3> getLocation();
 }
