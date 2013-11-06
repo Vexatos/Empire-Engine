@@ -1,16 +1,19 @@
 package dark.empire.village.village;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.Set;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldProvider;
 import net.minecraft.world.chunk.Chunk;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;
@@ -19,6 +22,7 @@ import universalelectricity.core.vector.Vector2;
 import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.Pair;
+import com.builtbroken.common.Triple;
 
 import cpw.mods.fml.common.IScheduledTickHandler;
 import cpw.mods.fml.common.TickType;
@@ -33,7 +37,7 @@ import dark.empire.core.empire.Empire;
 public class VillageManager implements IScheduledTickHandler
 {
     /** Map of village to their locations (dimID, XY coor) used to load and unload villages */
-    private static HashMap<String, Pair<Integer, Vector2>> villageToLocation = new HashMap();
+    private static HashMap<String, Triple<Integer, Vector3, Integer>> villageToLocation = new HashMap();
     private static Set<Village> villages = new HashSet<Village>();
     /** Villages waiting to be unloaded from the map */
     private static HashMap<Village, Integer> unloadList = new HashMap();
@@ -84,7 +88,7 @@ public class VillageManager implements IScheduledTickHandler
             Pair<World, Vector3> location = village.getLocation();
             if (location != null && location.left() != null && location.right() != null)
             {
-                villageToLocation.put(village.name, new Pair<Integer, Vector2>(location.left().provider.dimensionId, location.right().toVector2()));
+                villageToLocation.put(village.name, new Triple<Integer, Vector3, Integer>(location.left().provider.dimensionId, location.right(), village.sizeInChunks));
             }
         }
     }
@@ -92,8 +96,41 @@ public class VillageManager implements IScheduledTickHandler
     /** Temp loads all the villages from file so the manager can record what villages exist */
     public static void preLoadVillagesFromWorld()
     {
+        isLoadingVillages = true;
         File villageFolder = new File(NBTFileHelper.getWorldSaveDirectory(MinecraftServer.getServer().getFolderName()), VILLAGE_FILE);
-        //TODO get a list of all folders in the village folder, check for village.dat files then add those file locations to the maps
+        if (villageFolder.exists())
+        {
+            for (File fileEntry : villageFolder.listFiles())
+            {
+                if (fileEntry.isDirectory() && fileEntry.getName().startsWith("village"))
+                {
+                    for (File subFile : villageFolder.listFiles())
+                    {
+                        if (subFile.getName().equalsIgnoreCase("village.dat"))
+                        {
+                            NBTTagCompound tag = NBTFileHelper.loadNBTFile(subFile, false);
+                            if (tag.hasKey("name"))
+                            {
+                                String name = tag.getString("name");
+                                Triple<Integer, Vector3, Integer> l = null;
+                                if (tag.hasKey("dim") && tag.hasKey("xCoord"))
+                                {
+                                    l = new Triple<Integer, Vector3, Integer>(tag.getInteger("dim"), new Vector3(tag.getInteger("xCoord"), tag.getInteger("yCoord"), tag.getInteger("zCoord")), tag.getInteger("size"));
+
+                                }
+                                villageToLocation.put(name, l);
+                            }
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        else
+        {
+            villageFolder.mkdirs();
+        }
+        isLoadingVillages = false;
     }
 
     /** Loads a village from the save folder
@@ -124,6 +161,7 @@ public class VillageManager implements IScheduledTickHandler
         {
             File file = village.getSaveFile();
             village.inValidate();
+            villageToLocation.remove(village);
             return !file.exists() || file.delete();
         }
         return false;
@@ -156,10 +194,10 @@ public class VillageManager implements IScheduledTickHandler
     {
         if (type.equals(EnumSet.of(TickType.WORLDLOAD)) && !isLoadingVillages)
         {
-            if(VillageManager.loadedVillages)
+            if (VillageManager.loadedVillages)
             {
                 //Everything should have been saved before the game goes to main screen and the next map is loaded.
-                for(Village village : villages)
+                for (Village village : villages)
                 {
                     village.onUnload();
                     village.inValidate();
@@ -174,13 +212,15 @@ public class VillageManager implements IScheduledTickHandler
         else if (type.equals(EnumSet.of(TickType.SERVER)) && VillageManager.loadedVillages)
         {
             Iterator<Village> it = villages.iterator();
+            List<String> l = new ArrayList<String>();
             while (it.hasNext())
             {
                 Village village = it.next();
+                l.add(village.name);
                 Pair<World, Vector3> location = village.getLocation();
                 if (village.isValid())
                 {
-                    VillageManager.villageToLocation.put(village.name, new Pair<Integer, Vector2>(location.left().provider.dimensionId, location.right().toVector2()));
+                    VillageManager.villageToLocation.put(village.name, new Triple<Integer, Vector3, Integer>(location.left().provider.dimensionId, location.right(), village.sizeInChunks));
                     village.update();
                     if (village.shouldUnload() && !isPartOfVillageLoaded(village))
                     {
@@ -198,40 +238,65 @@ public class VillageManager implements IScheduledTickHandler
                     removeVillage(village, true);
                 }
             }
+            for (Entry<String, Triple<Integer, Vector3, Integer>> entry : villageToLocation.entrySet())
+            {
+                try
+                {
+                    if (!l.contains(entry.getKey()) && entry.getValue() != null)
+                    {
+                        World world = WorldProvider.getProviderForDimension(entry.getValue().getA()).worldObj;
+                        if (isPartOfVillageLoaded(world, entry.getValue().getB(), entry.getValue().getC()))
+                        {
+                            loadVillage(entry.getKey());
+                        }
+                    }
+                }
+                catch (Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
         }
+    }
+
+    public boolean isPartOfVillageLoaded(Village village)
+    {
+        if (village.getLocation() != null && village.getLocation().left() != null && village.getLocation().right() != null)
+        {
+            return isPartOfVillageLoaded(village.getLocation().left(), village.getLocation().right(), village.sizeInChunks);
+        }
+        return false;
     }
 
     /** Checks if part of the village is loaded
      *
      * @return true even if its only the very edge to preven issues of the center not getting loaded */
-    public boolean isPartOfVillageLoaded(Village village)
+    public boolean isPartOfVillageLoaded(World world, Vector3 location, int size)
     {
-        if (village != null)
+        if (world != null && location != null)
         {
-            Pair<World, Vector3> location = village.getLocation();
-            if (location != null && location.left() != null && location.right() != null)
+            if (size == 0)
             {
-                //TODO check if chunks in the area of the village are loaded
-                World world = location.left();
-                int sx = (location.right().intX() / 16) + village.sizeInChunks;
-                int sz = (location.right().intZ() / 16) + village.sizeInChunks;
+                size = 1;
+            }
+            int sx = (location.intX() / 16) + size;
+            int sz = (location.intZ() / 16) + size;
 
-                for (int x = sx; x <= sx && x > sx - village.sizeInChunks; x--)
+            for (int x = sx; x <= sx && x > sx - size; x--)
+            {
+                for (int z = sz; z <= sz && z > sz - size; z--)
                 {
-                    for (int z = sz; z <= sz && z > sz - village.sizeInChunks; z--)
+                    Chunk chunk = world.getChunkFromChunkCoords(x, z);
+                    if (chunk != null && chunk.isChunkLoaded)
                     {
-                        Chunk chunk = world.getChunkFromChunkCoords(x, z);
-                        if (chunk != null && chunk.isChunkLoaded)
-                        {
-                            /* TODO check if the village has anything loaded in the chunk, to decrease the village
-                             * having to be loaded if too far from the player. Should allow for chunkloading to happen
-                             * without the village existing */
-                            return true;
-                        }
+                        /* TODO check if the village has anything loaded in the chunk, to decrease the village
+                         * having to be loaded if too far from the player. Should allow for chunkloading to happen
+                         * without the village existing */
+                        return true;
                     }
                 }
-                return false;
             }
+            return false;
         }
         return false;
     }
