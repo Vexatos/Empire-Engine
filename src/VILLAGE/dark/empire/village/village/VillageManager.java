@@ -264,14 +264,6 @@ public class VillageManager implements IScheduledTickHandler
     public void tickStart(EnumSet<TickType> type, Object... tickData)
     {
         System.out.println("[VillageManager] 'test' tick");
-        if (!villageToLocation.containsKey("DebugTest"))
-        {
-            vill = createNewVillage(DimensionManager.getWorld(0), new Vector3(0, 100, 0), "DebugTest", null, "Manager:Manager");
-        }
-        else if (vill != null)
-        {
-            SaveManager.saveObject(vill);
-        }
 
         if (type.equals(EnumSet.of(TickType.SERVER)))
         {

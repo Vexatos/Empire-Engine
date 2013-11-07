@@ -26,6 +26,26 @@ public class Part
         defaultRotation = new Vector3(peace.rotateAngleX, peace.rotateAngleY, peace.rotateAngleZ);
     }
 
+    public ModelRenderer rotateBy(float rx, float ry, float rz)
+    {
+        return update(this.peace.rotateAngleX + rx, this.peace.rotateAngleY + ry, this.peace.rotateAngleZ + rz);
+    }
+
+    public ModelRenderer translateBy(float rx, float ry, float rz)
+    {
+        if (!this.lockPos)
+        {
+            if (this.child != null)
+            {
+                this.child.translateBy(rx, ry, rz);
+            }
+            this.peace.rotationPointX += rx;
+            this.peace.rotationPointY += ry;
+            this.peace.rotationPointZ += rz;
+        }
+        return this.peace;
+    }
+
     public ModelRenderer update(float rx, float ry, float rz)
     {
         //Update rotation
