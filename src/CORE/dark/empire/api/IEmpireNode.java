@@ -5,11 +5,9 @@ import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.Pair;
 
-import dark.empire.core.empire.Empire;
-
 /** Nodes that are part of the empire like fortresses, villages, forwards bases, houses, building,
  * ect
- *
+ * 
  * @author DarkGuardsman */
 public interface IEmpireNode extends IEmpireObject
 {

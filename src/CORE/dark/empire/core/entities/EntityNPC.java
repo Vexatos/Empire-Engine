@@ -2,7 +2,6 @@ package dark.empire.core.entities;
 
 import net.minecraft.entity.EntityCreature;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
 import net.minecraft.world.World;
 import dark.empire.api.IEmpireEntity;
 import dark.empire.core.ai.FOFSystem;

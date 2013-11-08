@@ -6,7 +6,7 @@ import net.minecraft.entity.monster.IMob;
 
 /** Friend or foe system that can be used by an entity to create a targeting system for logicily
  * targeting entities
- *
+ * 
  * @author DarkGuardsman */
 public class FOFSystem
 {

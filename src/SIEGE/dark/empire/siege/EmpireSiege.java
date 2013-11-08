@@ -21,7 +21,6 @@ import dark.core.network.PacketHandler;
 import dark.core.prefab.ModPrefab;
 import dark.empire.drone.EDCommonProxy;
 import dark.empire.drone.EDRecipeLoader;
-import dark.empire.drone.EmpireDrone;
 
 @Mod(modid = EmpireSiege.MOD_ID, name = EmpireSiege.MOD_NAME, version = EmpireSiege.VERSION, dependencies = "after:EmpireEngine", useMetadata = true)
 @NetworkMod(clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)

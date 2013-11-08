@@ -15,13 +15,8 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldProvider;
 import net.minecraft.world.chunk.Chunk;
-import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.event.ForgeSubscribe;
 import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.event.world.WorldEvent.Load;
-import net.minecraftforge.event.world.WorldEvent.Save;
-import net.minecraftforge.event.world.WorldEvent.Unload;
-import universalelectricity.core.vector.Vector2;
 import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.Pair;
@@ -35,7 +30,7 @@ import dark.empire.api.village.IVillage;
 import dark.empire.core.empire.Empire;
 
 /** Manages the functionality of the villages
- *
+ * 
  * @author Darkguardsman */
 public class VillageManager implements IScheduledTickHandler
 {
@@ -66,7 +61,7 @@ public class VillageManager implements IScheduledTickHandler
     }
 
     /** Creates a new village, use loadVillage to get an exiting village
-     *
+     * 
      * @param name - name the village will be created with and must be unique
      * @param empire - optional, empire the village will be attached to
      * @param creator - what created the village, can be a player, the world, or an entity
@@ -197,7 +192,7 @@ public class VillageManager implements IScheduledTickHandler
     }
 
     /** Loads a village from the save folder
-     *
+     * 
      * @param name - unique name of the village */
     public static IVillage loadVillage(String name)
     {
@@ -236,7 +231,7 @@ public class VillageManager implements IScheduledTickHandler
     }
 
     /** Removes the village from the map and unloads it from memory
-     *
+     * 
      * @param village - village
      * @param delete - should we delte it save file
      * @return true if nothing went wrong */
@@ -326,7 +321,7 @@ public class VillageManager implements IScheduledTickHandler
     }
 
     /** Checks if part of the village is loaded
-     *
+     * 
      * @return true even if its only the very edge to preven issues of the center not getting loaded */
     public boolean isPartOfVillageLoaded(World world, Vector3 location, int size)
     {

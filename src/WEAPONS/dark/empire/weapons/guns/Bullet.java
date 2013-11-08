@@ -1,4 +1,4 @@
-package dark.empire.weapons.items;
+package dark.empire.weapons.guns;
 
 import java.util.Random;
 

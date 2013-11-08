@@ -1,7 +1,6 @@
 package dark.empire.drone;
 
 import dark.core.common.RecipeLoader;
-import dark.empire.siege.ESRecipeLoader;
 
 public class EDRecipeLoader extends RecipeLoader
 {

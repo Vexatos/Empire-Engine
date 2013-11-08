@@ -19,7 +19,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.ModPrefab;
-import dark.empire.siege.EmpireSiege;
 
 @Mod(modid = EmpireDrone.MOD_ID, name = EmpireDrone.MOD_NAME, version = EmpireDrone.VERSION, dependencies = "after:EmpireEngine", useMetadata = true)
 @NetworkMod(clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)

@@ -1,4 +1,4 @@
-package dark.empire.weapons.items;
+package dark.empire.weapons.guns;
 
 import net.minecraft.block.Block;
 import net.minecraft.creativetab.CreativeTabs;

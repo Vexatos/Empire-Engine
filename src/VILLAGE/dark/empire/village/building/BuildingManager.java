@@ -1,11 +1,11 @@
 package dark.empire.village.building;
 
-import universalelectricity.core.vector.Vector3;
 import net.minecraft.world.World;
+import universalelectricity.core.vector.Vector3;
 
 /** Handles the creation of buildings only. Everything else is handled by the village that the
  * building is created in
- *
+ * 
  * @author Darkguardsman */
 public class BuildingManager
 {

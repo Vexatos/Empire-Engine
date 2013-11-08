@@ -1,8 +1,8 @@
 package dark.empire.api.weapons;
 
 import net.minecraft.item.ItemStack;
-import dark.empire.weapons.items.AmmoType;
-import dark.empire.weapons.items.Bullet;
+import dark.empire.weapons.guns.AmmoType;
+import dark.empire.weapons.guns.Bullet;
 
 public interface IBullet
 {

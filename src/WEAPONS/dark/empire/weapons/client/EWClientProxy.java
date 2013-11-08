@@ -8,7 +8,7 @@ import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
 import dark.empire.weapons.EWCommonProxy;
 import dark.empire.weapons.EWRecipeLoader;
-import dark.empire.weapons.items.PlayerTickHandler;
+import dark.empire.weapons.guns.PlayerTickHandler;
 
 public class EWClientProxy extends EWCommonProxy
 {

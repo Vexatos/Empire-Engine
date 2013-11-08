@@ -1,8 +1,6 @@
 package dark.empire.village.village;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
@@ -16,11 +14,10 @@ import dark.core.save.NBTFileHelper;
 import dark.empire.api.village.IVillage;
 import dark.empire.api.village.IVillageObject;
 import dark.empire.core.empire.Empire;
-import dark.empire.core.entities.EntityNPC;
 
 /** Virtual entity that control all aspect of the physical village in the world. Mainly its only used
  * to store information and process NPC events
- *
+ * 
  * @author DarkGuardsman */
 public class Village implements IVillage
 {
@@ -53,6 +50,7 @@ public class Village implements IVillage
     }
 
     /** Called when the village is created */
+    @Override
     public void init()
     {
         VillageManager.registerVillage(this);
@@ -112,6 +110,7 @@ public class Village implements IVillage
         return this.villageCenter;
     }
 
+    @Override
     public void load(NBTTagCompound nbt)
     {
         this.name = nbt.getString("name");
@@ -120,6 +119,7 @@ public class Village implements IVillage
 
     }
 
+    @Override
     public void save(NBTTagCompound nbt)
     {
         nbt.setString("name", this.name);
@@ -141,7 +141,7 @@ public class Village implements IVillage
 
     /** Is the village valid. This is used by the manager to check if the village is able to keep
      * function.
-     *
+     * 
      * @return true for good, false if this village should be cleared out of the list */
     public boolean isValid()
     {

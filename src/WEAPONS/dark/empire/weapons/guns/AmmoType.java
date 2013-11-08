@@ -1,4 +1,4 @@
-package dark.empire.weapons.items;
+package dark.empire.weapons.guns;
 
 public enum AmmoType
 {

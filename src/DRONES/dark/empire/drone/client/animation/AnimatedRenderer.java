@@ -3,10 +3,6 @@ package dark.empire.drone.client.animation;
 import java.util.HashMap;
 import java.util.Map.Entry;
 
-import net.minecraft.client.renderer.entity.RendererLivingEntity;
-import net.minecraft.entity.Entity;
-import net.minecraft.util.ResourceLocation;
-
 import universalelectricity.core.vector.Vector3;
 
 public class AnimatedRenderer

@@ -4,7 +4,7 @@ package dark.empire.api.village;
  * actually have your object register itself with the village. If you implement this you can get all
  * the empire data from the village rather than include it yourself. Use {@link #IVirtualObject} if
  * you want the village to save your object when it saves to the map
- *
+ * 
  * @author DarkGuardsman */
 public interface IVillageObject
 {

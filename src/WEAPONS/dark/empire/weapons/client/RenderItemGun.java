@@ -15,7 +15,7 @@ import dark.empire.weapons.client.models.ModelDBShotGun;
 import dark.empire.weapons.client.models.ModelHandGun;
 import dark.empire.weapons.client.models.ModelLaserRifle;
 import dark.empire.weapons.client.models.ModelShotGun;
-import dark.empire.weapons.items.ItemProjectileWeapon;
+import dark.empire.weapons.guns.ItemProjectileWeapon;
 
 @SideOnly(Side.CLIENT)
 public class RenderItemGun implements IItemRenderer

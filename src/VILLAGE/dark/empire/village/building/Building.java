@@ -2,8 +2,8 @@ package dark.empire.village.building;
 
 import java.util.List;
 
-import universalelectricity.core.vector.Vector3;
 import net.minecraft.world.World;
+import universalelectricity.core.vector.Vector3;
 import dark.empire.api.village.IVillage;
 import dark.empire.api.village.IVillageObject;
 import dark.empire.village.village.Village;

@@ -22,10 +22,10 @@ import cpw.mods.fml.common.network.NetworkMod;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.ModPrefab;
 import dark.core.registration.ModObjectRegistry;
-import dark.empire.weapons.items.ItemBullet;
-import dark.empire.weapons.items.ItemBullet.BulletData;
-import dark.empire.weapons.items.ItemBullet.BulletTypes;
-import dark.empire.weapons.items.ItemProjectileWeapon;
+import dark.empire.weapons.guns.ItemBullet;
+import dark.empire.weapons.guns.ItemBullet.BulletData;
+import dark.empire.weapons.guns.ItemBullet.BulletTypes;
+import dark.empire.weapons.guns.ItemProjectileWeapon;
 
 @Mod(modid = EmpireWeapons.MOD_ID, name = EmpireWeapons.MOD_NAME, version = EmpireWeapons.VERSION, dependencies = "after:EmpireEngine", useMetadata = true)
 @NetworkMod(channels = { EmpireWeapons.CHANNEL }, clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)

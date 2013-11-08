@@ -1,4 +1,4 @@
-package dark.empire.weapons.items;
+package dark.empire.weapons.guns;
 
 import java.awt.Color;
 import java.util.List;
@@ -30,6 +30,7 @@ import dark.core.common.DarkMain;
 import dark.core.prefab.ItemBasic;
 import dark.core.prefab.ModPrefab;
 import dark.core.prefab.helpers.ItemWorldHelper;
+import dark.core.prefab.helpers.RayTraceHelper;
 import dark.empire.api.weapons.IBullet;
 import dark.empire.weapons.EmpireWeapons;
 
@@ -76,7 +77,7 @@ public class ItemProjectileWeapon extends ItemBasic implements IItemElectric
                 par3List.add("Reload Time: " + (weapon.reloadTicks / 20) + "s");
                 par3List.add("Damage: " + (weapon.minDamage + dm) + " - " + (weapon.maxDamage + dM));
             }
-            if (!creator.equalsIgnoreCase("creative") && creator == "")
+            if (!creator.equalsIgnoreCase("creative") && creator != "")
             {
                 par3List.add("Created by: " + creator);
             }
@@ -89,6 +90,12 @@ public class ItemProjectileWeapon extends ItemBasic implements IItemElectric
         {
             par3List.add("No weapon data");
         }
+    }
+
+    @Override
+    public void onPlayerStoppedUsing(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer, int par4)
+    {
+        //TODO use for launcher based weapons
     }
 
     public ItemStack addComponentToWeapons(ItemStack stack)
@@ -192,6 +199,7 @@ public class ItemProjectileWeapon extends ItemBasic implements IItemElectric
             }
             if (weapon != null && (dontConsumeAmmo || bullet_item != null || weapon.type == AmmoType.BATTERY && this.getElectricityStored(stack) > 10) && !weapon.onFired(entityLiving, bullet))
             {
+                //Consume ammo
                 if (bullet_item != null && !dontConsumeAmmo)
                 {
                     if (shell != null)
@@ -201,10 +209,12 @@ public class ItemProjectileWeapon extends ItemBasic implements IItemElectric
                     ((EntityPlayer) entityLiving).inventory.decrStackSize(bullet_item.left(), 1);
 
                 }
+                //Consume energy if energy is consumed per shot
                 if (weapon.type == AmmoType.BATTERY && !dontConsumeAmmo)
                 {
                     this.discharge(stack, Guns.get(stack.getItemDamage()).costAShot, true);
                 }
+                //Fire bullets
                 for (int i = 0; i < bullet.rounds; i++)
                 {
                     float damage = weapon.getDamage(entityLiving.worldObj.rand) + bullet.getDamage(entityLiving.worldObj.rand);
@@ -214,12 +224,12 @@ public class ItemProjectileWeapon extends ItemBasic implements IItemElectric
                     float par5 = (entityLiving.worldObj.rand.nextFloat() * (entityLiving.worldObj.rand.nextBoolean() ? -delta : delta));
                     Vec3 e = new Vector3(par1, par3, par5).toVec3();
                     Vec3 playerPosition = Vec3.createVectorHelper(entityLiving.posX, entityLiving.posY + entityLiving.getEyeHeight(), entityLiving.posZ);
-                    Vec3 playerLook = ProjectileWeaponManager.getLook(entityLiving, 1.0f);
+                    Vec3 playerLook = RayTraceHelper.getLook(entityLiving, 1.0f);
                     Vec3 p = Vec3.createVectorHelper(playerPosition.xCoord + playerLook.xCoord * 2, playerPosition.yCoord + playerLook.yCoord * 2, playerPosition.zCoord + playerLook.zCoord * 2);
 
                     Vec3 playerViewOffset = Vec3.createVectorHelper(playerPosition.xCoord + playerLook.xCoord * weapon.range, playerPosition.yCoord + playerLook.yCoord * weapon.range + e.yCoord, playerPosition.zCoord + playerLook.zCoord * weapon.range + e.zCoord);
 
-                    MovingObjectPosition hit = ProjectileWeaponManager.ray_trace_do(entityLiving.worldObj, entityLiving, e, weapon.range, true);
+                    MovingObjectPosition hit = RayTraceHelper.ray_trace_do(entityLiving.worldObj, entityLiving, e, weapon.range, true);
                     entityLiving.worldObj.playSound(entityLiving.posX, entityLiving.posY, entityLiving.posZ, EmpireWeapons.instance.PREFIX + "shotgun2", 0.5f, 0.7f, true);
                     Vec3 lookVec = entityLiving.getLookVec();
                     if (hit != null)
@@ -299,6 +309,10 @@ public class ItemProjectileWeapon extends ItemBasic implements IItemElectric
     {
         return this.getUnlocalizedName() + "." + par1ItemStack.getItemDamage();
     }
+
+    /* 888888888888888888888888888888888888888888888888
+     * Energy Methods
+     * 888888888888888888888888888888888888888888888888 */
 
     @Override
     public float recharge(ItemStack itemStack, float energy, boolean doReceive)

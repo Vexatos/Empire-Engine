@@ -1,7 +1,6 @@
 package dark.empire.village;
 
 import dark.core.common.RecipeLoader;
-import dark.empire.siege.ESRecipeLoader;
 
 public class EVRecipeLoader extends RecipeLoader
 {
