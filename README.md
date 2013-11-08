@@ -10,6 +10,9 @@ What is a world without people. This mod focus is to create intelligent NPCs tha
 * Doppelgangerous - Building Designer
 
 ### License
+1) Use at your own risk as no warrenty is given or implied in any way
+2) You can't use this in your mod pack without permission
+3) You can't use my code in another mod but are welcome to learn from it
 Read the license.txt in the repo file for more information
 
 ### Contact
