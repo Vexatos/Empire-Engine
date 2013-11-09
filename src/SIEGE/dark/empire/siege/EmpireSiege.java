@@ -19,8 +19,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.ModPrefab;
-import dark.empire.drone.EDCommonProxy;
-import dark.empire.drone.EDRecipeLoader;
 
 @Mod(modid = EmpireSiege.MOD_ID, name = EmpireSiege.MOD_NAME, version = EmpireSiege.VERSION, dependencies = "after:EmpireEngine", useMetadata = true)
 @NetworkMod(clientSideRequired = true, serverSideRequired = false, packetHandler = PacketHandler.class)
@@ -39,7 +37,7 @@ public class EmpireSiege extends ModPrefab
     public static final String MOD_NAME = "Empire Engine : Siege Package";
 
     @SidedProxy(clientSide = "dark.empire.siege.client.ESClientProxy", serverSide = "dark.empire.siege.ESCommonProxy")
-    public static EDCommonProxy proxy;
+    public static ESCommonProxy proxy;
 
     @Metadata(MOD_ID)
     public static ModMetadata meta;
@@ -119,7 +117,7 @@ public class EmpireSiege extends ModPrefab
     @Override
     public void loadRecipes()
     {
-        EDRecipeLoader.instance().loadRecipes();
+        ESRecipeLoader.instance().loadRecipes();
     }
 
 }

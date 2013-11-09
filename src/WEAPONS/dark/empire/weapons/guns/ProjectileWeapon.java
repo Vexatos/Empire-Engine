@@ -8,6 +8,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.Icon;
 import cpw.mods.fml.common.FMLLog;
+import dark.empire.api.weapons.AmmoType;
+import dark.empire.api.weapons.IBullet;
 
 public class ProjectileWeapon
 {
@@ -45,7 +47,7 @@ public class ProjectileWeapon
      * @param entity - entity firing use this for aim location
      * @param bullet - bullet fired
      * @return true to stop the built in firing code and replace it with your own custom code */
-    public boolean onFired(Entity entity, Bullet bullet)
+    public boolean onFired(Entity entity, IBullet bullet)
     {
         return false;
     }

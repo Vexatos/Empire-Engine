@@ -10,13 +10,15 @@ import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.prefab.ItemBasic;
 import dark.core.prefab.ModPrefab;
+import dark.empire.api.weapons.AmmoType;
 import dark.empire.api.weapons.IBullet;
+import dark.empire.api.weapons.IItemBullet;
 import dark.empire.weapons.EmpireWeapons;
 
 /** Class for bullets, clips, and ammo in general
  * 
  * @author DarkGuardsman */
-public class ItemBullet extends ItemBasic implements IBullet
+public class ItemBullet extends ItemBasic implements IItemBullet
 {
     public static int spacing = 100;
 
@@ -75,7 +77,7 @@ public class ItemBullet extends ItemBasic implements IBullet
     }
 
     @Override
-    public Bullet getBullet(ItemStack stack)
+    public IBullet getBullet(ItemStack stack)
     {
         if (stack != null)
         {

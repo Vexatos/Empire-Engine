@@ -3,8 +3,9 @@ package dark.empire.weapons.guns;
 import java.util.Random;
 
 import net.minecraft.entity.Entity;
+import dark.empire.api.weapons.IBullet;
 
-public class Bullet
+public class Bullet implements IBullet
 {
     public String name;
     public float bulletDamage = 5, bulletDamageMax = 6, fallOff = 0.001f;
@@ -41,6 +42,30 @@ public class Bullet
     public float getDamage(Random rand)
     {
         return rand.nextFloat() * bulletDamage;
+    }
+
+    @Override
+    public float getMinDamage()
+    {
+        return this.bulletDamage;
+    }
+
+    @Override
+    public float getMaxDamage()
+    {
+        return this.bulletDamageMax;
+    }
+
+    @Override
+    public float getFallOffBonus()
+    {
+        return this.fallOff;
+    }
+
+    @Override
+    public int getShotsFired()
+    {
+        return this.rounds;
     }
 
 }

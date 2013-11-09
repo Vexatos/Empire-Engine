@@ -31,7 +31,9 @@ import dark.core.prefab.ItemBasic;
 import dark.core.prefab.ModPrefab;
 import dark.core.prefab.helpers.ItemWorldHelper;
 import dark.core.prefab.helpers.RayTraceHelper;
+import dark.empire.api.weapons.AmmoType;
 import dark.empire.api.weapons.IBullet;
+import dark.empire.api.weapons.IItemBullet;
 import dark.empire.weapons.EmpireWeapons;
 
 /** Basic Projectile weapon class that stores all the attributes of the weapon as NBT
@@ -64,12 +66,12 @@ public class ItemProjectileWeapon extends ItemBasic implements IItemElectric
             {
                 Pair<Integer, ItemStack> bullet_item = this.getBullet(player, weapon.type);
                 float dm = 0, dM = 0, f = 0;
-                if (bullet_item != null && bullet_item.right() != null && bullet_item.right().getItem() instanceof IBullet)
+                if (bullet_item != null && bullet_item.right() != null && bullet_item.right().getItem() instanceof IItemBullet)
                 {
-                    Bullet bullet = ((IBullet) bullet_item.right().getItem()).getBullet(bullet_item.right());
-                    dm = bullet.bulletDamage;
-                    dM = bullet.bulletDamageMax;
-                    f = bullet.fallOff;
+                    IBullet bullet = ((IItemBullet) bullet_item.right().getItem()).getBullet(bullet_item.right());
+                    dm = bullet.getMinDamage();
+                    dM = bullet.getMaxDamage();
+                    f = bullet.getFallOffBonus();
                 }
                 par3List.add("Range: " + weapon.range + "m");
                 par3List.add("FallOff: " + (weapon.fallOffPerMeter + f) + "m per m");
@@ -190,12 +192,12 @@ public class ItemProjectileWeapon extends ItemBasic implements IItemElectric
 
             ProjectileWeapon weapon = Guns.get(stack.getItemDamage()).weapon;
             Pair<Integer, ItemStack> bullet_item = this.getBullet(((EntityPlayer) entityLiving), weapon.type);
-            Bullet bullet = Bullet.TEN_MM;
+            IBullet bullet = Bullet.TEN_MM;
             ItemStack shell = null;
-            if (bullet_item != null && bullet_item.right() != null && bullet_item.right().getItem() instanceof IBullet)
+            if (bullet_item != null && bullet_item.right() != null && bullet_item.right().getItem() instanceof IItemBullet)
             {
-                bullet = ((IBullet) bullet_item.right().getItem()).getBullet(bullet_item.right());
-                shell = ((IBullet) bullet_item.right().getItem()).getShell(bullet_item.right());
+                bullet = ((IItemBullet) bullet_item.right().getItem()).getBullet(bullet_item.right());
+                shell = ((IItemBullet) bullet_item.right().getItem()).getShell(bullet_item.right());
             }
             if (weapon != null && (dontConsumeAmmo || bullet_item != null || weapon.type == AmmoType.BATTERY && this.getElectricityStored(stack) > 10) && !weapon.onFired(entityLiving, bullet))
             {
@@ -215,10 +217,10 @@ public class ItemProjectileWeapon extends ItemBasic implements IItemElectric
                     this.discharge(stack, Guns.get(stack.getItemDamage()).costAShot, true);
                 }
                 //Fire bullets
-                for (int i = 0; i < bullet.rounds; i++)
+                for (int i = 0; i < bullet.getShotsFired(); i++)
                 {
                     float damage = weapon.getDamage(entityLiving.worldObj.rand) + bullet.getDamage(entityLiving.worldObj.rand);
-                    float delta = weapon.range * (weapon.fallOffPerMeter + bullet.fallOff);
+                    float delta = weapon.range * (weapon.fallOffPerMeter + bullet.getFallOffBonus());
                     float par1 = (entityLiving.worldObj.rand.nextFloat() * (entityLiving.worldObj.rand.nextBoolean() ? -delta : delta));
                     float par3 = (entityLiving.worldObj.rand.nextFloat() * (entityLiving.worldObj.rand.nextBoolean() ? -delta : delta));
                     float par5 = (entityLiving.worldObj.rand.nextFloat() * (entityLiving.worldObj.rand.nextBoolean() ? -delta : delta));
@@ -267,11 +269,11 @@ public class ItemProjectileWeapon extends ItemBasic implements IItemElectric
         for (int i = 0; i < player.inventory.getSizeInventory(); i++)
         {
             ItemStack inventoryStack = player.inventory.getStackInSlot(i);
-            if (inventoryStack != null && inventoryStack.getItem() instanceof IBullet)
+            if (inventoryStack != null && inventoryStack.getItem() instanceof IItemBullet)
             {
-                boolean bullet = ((IBullet) inventoryStack.getItem()).getBullet(inventoryStack) != null;
-                int t = ((IBullet) inventoryStack.getItem()).getType(inventoryStack) != null ? ((IBullet) inventoryStack.getItem()).getType(inventoryStack).ordinal() : -1;
-                if (((IBullet) inventoryStack.getItem()).getBullet(inventoryStack) != null && ((IBullet) inventoryStack.getItem()).getType(inventoryStack) == type)
+                boolean bullet = ((IItemBullet) inventoryStack.getItem()).getBullet(inventoryStack) != null;
+                int t = ((IItemBullet) inventoryStack.getItem()).getType(inventoryStack) != null ? ((IItemBullet) inventoryStack.getItem()).getType(inventoryStack).ordinal() : -1;
+                if (((IItemBullet) inventoryStack.getItem()).getBullet(inventoryStack) != null && ((IItemBullet) inventoryStack.getItem()).getType(inventoryStack) == type)
                 {
                     return new Pair<Integer, ItemStack>(i, inventoryStack);
                 }

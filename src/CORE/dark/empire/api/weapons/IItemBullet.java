@@ -1,13 +1,11 @@
 package dark.empire.api.weapons;
 
 import net.minecraft.item.ItemStack;
-import dark.empire.weapons.guns.AmmoType;
-import dark.empire.weapons.guns.Bullet;
 
-public interface IBullet
+public interface IItemBullet
 {
     /** Bullet class that is used to do calculation when the gun fires this bullet item */
-    public Bullet getBullet(ItemStack stack);
+    public IBullet getBullet(ItemStack stack);
 
     /** Item that is ejected from the weapon when its fired */
     public ItemStack getShell(ItemStack stack);

@@ -9,6 +9,7 @@ import dark.core.interfaces.IExternalInv;
 import dark.core.interfaces.IInvBox;
 import dark.core.prefab.invgui.InvChest;
 import dark.empire.api.weapons.IBullet;
+import dark.empire.api.weapons.IItemBullet;
 
 public abstract class EntityArty extends Entity implements IExternalInv
 {
@@ -84,9 +85,9 @@ public abstract class EntityArty extends Entity implements IExternalInv
     @Override
     public boolean canStore(ItemStack stack, int slot, ForgeDirection side)
     {
-        if (stack != null && stack.getItem() instanceof IBullet)
+        if (stack != null && stack.getItem() instanceof IItemBullet)
         {
-            return ((IBullet) stack.getItem()).getBullet(stack) != null;
+            return ((IItemBullet) stack.getItem()).getBullet(stack) != null;
         }
         return false;
     }
