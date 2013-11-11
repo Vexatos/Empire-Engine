@@ -101,53 +101,58 @@ public class VillageManager implements IScheduledTickHandler
     @ForgeSubscribe
     public void onWorldLoad(WorldEvent.Load event)
     {
-        int dim = event.world.provider.dimensionId;
-
-        System.out.println("[VillageManager] loading villages from dim " + dim);
-        //Refresh the list if the world decides to reload when it was already loaded
-        if (loadedVillages.containsKey(dim) && loadedVillages.get(dim))
+        if (!event.world.isRemote)
         {
-            for (Village village : villages)
+            int dim = event.world.provider.dimensionId;
+
+            System.out.println("[VillageManager] loading villages from dim " + dim);
+            //Refresh the list if the world decides to reload when it was already loaded
+            if (loadedVillages.containsKey(dim) && loadedVillages.get(dim))
             {
-                village.onUnload();
-                village.inValidate();
+                for (Village village : villages)
+                {
+                    village.onUnload();
+                    village.inValidate();
+                }
+                villages.clear();
+                villageToLocation.clear();
+                unloadList.clear();
+                System.gc();
             }
-            villages.clear();
-            villageToLocation.clear();
-            unloadList.clear();
-            System.gc();
+            preLoadVillagesFromWorld(dim);
         }
-        preLoadVillagesFromWorld(dim);
     }
 
     @ForgeSubscribe
     public void onWorldunLoad(WorldEvent.Unload event)
     {
-        int dim = event.world.provider.dimensionId;
-        System.out.println("[VillageManager] unloading villages from dim " + dim);
-        Iterator<Village> it = villages.iterator();
-
-        while (it.hasNext())
+        if (!event.world.isRemote)
         {
-            Village village = it.next();
-            Pair<World, Vector3> location = village.getLocation();
-            if (location != null && location.left() != null)
+            int dim = event.world.provider.dimensionId;
+            System.out.println("[VillageManager] unloading villages from dim " + dim);
+            Iterator<Village> it = villages.iterator();
+
+            while (it.hasNext())
             {
-                if (location.left().provider.dimensionId == dim)
+                Village village = it.next();
+                Pair<World, Vector3> location = village.getLocation();
+                if (location != null && location.left() != null)
                 {
-                    SaveManager.saveObject(village);
+                    if (location.left().provider.dimensionId == dim)
+                    {
+                        SaveManager.saveObject(village);
+                        unloadList.put(village, 0);
+                        it.remove();
+                    }
+                }
+                else
+                {
                     unloadList.put(village, 0);
                     it.remove();
                 }
             }
-            else
-            {
-                unloadList.put(village, 0);
-                it.remove();
-            }
+            loadedVillages.put(dim, false);
         }
-        loadedVillages.put(dim, false);
-
     }
 
     /** Temp loads all the villages from file so the manager can record what villages exist */
