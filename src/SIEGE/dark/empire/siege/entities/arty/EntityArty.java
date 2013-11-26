@@ -8,7 +8,6 @@ import net.minecraftforge.common.ForgeDirection;
 import dark.core.interfaces.IExternalInv;
 import dark.core.interfaces.IInvBox;
 import dark.core.prefab.invgui.InvChest;
-import dark.empire.api.weapons.IBullet;
 import dark.empire.api.weapons.IItemBullet;
 
 public abstract class EntityArty extends Entity implements IExternalInv

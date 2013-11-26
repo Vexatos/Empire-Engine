@@ -231,7 +231,7 @@ public class ItemProjectileWeapon extends ItemBasic implements IItemElectric
 
                     Vec3 playerViewOffset = Vec3.createVectorHelper(playerPosition.xCoord + playerLook.xCoord * weapon.range, playerPosition.yCoord + playerLook.yCoord * weapon.range + e.yCoord, playerPosition.zCoord + playerLook.zCoord * weapon.range + e.zCoord);
 
-                    MovingObjectPosition hit = RayTraceHelper.ray_trace_do(entityLiving.worldObj, entityLiving, e, weapon.range, true);
+                    MovingObjectPosition hit = RayTraceHelper.do_rayTraceFromEntity(entityLiving, e, weapon.range, true);
                     entityLiving.worldObj.playSound(entityLiving.posX, entityLiving.posY, entityLiving.posZ, EmpireWeapons.instance.PREFIX + "shotgun2", 0.5f, 0.7f, true);
                     Vec3 lookVec = entityLiving.getLookVec();
                     if (hit != null)

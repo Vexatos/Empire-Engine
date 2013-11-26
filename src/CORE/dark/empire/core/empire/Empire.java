@@ -126,7 +126,7 @@ public class Empire implements ISpecialAccess, Cloneable, IVirtualObject
     {
         for (AccessGroup group : this.groups)
         {
-            if (group.name().equalsIgnoreCase(name))
+            if (group.getName().equalsIgnoreCase(name))
             {
                 return group;
             }
@@ -135,12 +135,13 @@ public class Empire implements ISpecialAccess, Cloneable, IVirtualObject
     }
 
     @Override
-    public void addGroup(AccessGroup group)
+    public boolean addGroup(AccessGroup group)
     {
         if (!this.groups.contains(group))
         {
-            this.groups.add(group);
+            return this.groups.add(group);
         }
+        return false;
     }
 
     @Override

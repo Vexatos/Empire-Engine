@@ -1,7 +1,6 @@
 package dark.empire.drone.client.animation;
 
 import net.minecraft.client.model.ModelRenderer;
-import universalelectricity.core.vector.Quaternion;
 import universalelectricity.core.vector.Vector3;
 
 public class Part
@@ -116,10 +115,10 @@ public class Part
         else if (this.parent != null)
         {
             //Ignore coords as this part is locked to its parent
-            Quaternion quat = new Quaternion();
-            quat.FromEuler(x, y, z);
+            // Quaternion quat = new Quaternion();
+            //quat.FromEuler(x, y, z);
             Vector3 vec = new Vector3(parent.peace.rotationPointX, parent.peace.rotationPointY, parent.peace.rotationPointZ);
-            quat.multi(vec);
+            //quat.multi(vec);
             this.peace.setRotationPoint((float) vec.x, (float) vec.y, (float) vec.z);
         }
         else

@@ -5,7 +5,7 @@ package dark.empire.api.weapons;
  * @author DarkGuardsman */
 public enum AmmoType
 {
-    /** Bolt from a crossbow*/
+    /** Bolt from a crossbow */
     BOLT("bolt"),
     /** Arrow from a bow */
     ARROW("arrow"),

@@ -24,6 +24,7 @@ public class Bullet implements IBullet
         this.rounds = rounds;
     }
 
+    @Override
     public void onImpact(Entity entity)
     {
         if (entity != null)
@@ -39,6 +40,7 @@ public class Bullet implements IBullet
         }
     }
 
+    @Override
     public float getDamage(Random rand)
     {
         return rand.nextFloat() * bulletDamage;
