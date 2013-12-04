@@ -8,11 +8,11 @@ import java.util.Set;
 
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import dark.api.IVirtualObject;
 import dark.api.access.AccessGroup;
 import dark.api.access.AccessUser;
 import dark.api.access.ISpecialAccess;
-import dark.core.prefab.terminal.TerminalCommandRegistry;
+import dark.api.access.GroupRegistry;
+import dark.api.save.IVirtualObject;
 import dark.empire.api.IEmpireNode;
 
 public class Empire implements ISpecialAccess, Cloneable, IVirtualObject
@@ -29,7 +29,7 @@ public class Empire implements ISpecialAccess, Cloneable, IVirtualObject
     public Empire(String name)
     {
         this.displayName = name;
-        TerminalCommandRegistry.loadNewGroupSet(this);
+        GroupRegistry.loadNewGroupSet(this);
     }
 
     public String getID()

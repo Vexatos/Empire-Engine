@@ -24,8 +24,8 @@ import com.builtbroken.common.Triple;
 
 import cpw.mods.fml.common.IScheduledTickHandler;
 import cpw.mods.fml.common.TickType;
-import dark.core.save.NBTFileHelper;
-import dark.core.save.SaveManager;
+import dark.api.save.NBTFileHelper;
+import dark.api.save.SaveManager;
 import dark.empire.api.village.IVillage;
 import dark.empire.core.empire.Empire;
 

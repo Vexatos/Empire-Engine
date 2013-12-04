@@ -10,7 +10,7 @@ import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.Pair;
 
-import dark.core.save.NBTFileHelper;
+import dark.api.save.NBTFileHelper;
 import dark.empire.api.village.IVillage;
 import dark.empire.api.village.IVillageObject;
 import dark.empire.core.empire.Empire;
