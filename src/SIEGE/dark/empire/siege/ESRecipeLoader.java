@@ -1,6 +1,6 @@
 package dark.empire.siege;
 
-import dark.core.common.RecipeLoader;
+import dark.core.prefab.RecipeLoader;
 
 public class ESRecipeLoader extends RecipeLoader
 {

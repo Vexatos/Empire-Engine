@@ -10,8 +10,8 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
 import dark.api.access.AccessGroup;
 import dark.api.access.AccessUser;
-import dark.api.access.ISpecialAccess;
 import dark.api.access.GroupRegistry;
+import dark.api.access.ISpecialAccess;
 import dark.api.save.IVirtualObject;
 import dark.empire.api.IEmpireNode;
 

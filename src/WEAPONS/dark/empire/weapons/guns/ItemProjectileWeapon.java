@@ -25,8 +25,6 @@ import com.builtbroken.common.Pair;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.client.Effects;
-import dark.core.common.DarkMain;
 import dark.core.helpers.ItemWorldHelper;
 import dark.core.helpers.RayTraceHelper;
 import dark.core.prefab.ItemBasic;
@@ -35,6 +33,8 @@ import dark.empire.api.weapons.AmmoType;
 import dark.empire.api.weapons.IBullet;
 import dark.empire.api.weapons.IItemBullet;
 import dark.empire.weapons.EmpireWeapons;
+import dark.machines.DarkMain;
+import dark.machines.client.Effects;
 
 /** Basic Projectile weapon class that stores all the attributes of the weapon as NBT
  * 

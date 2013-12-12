@@ -5,7 +5,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.oredict.ShapedOreRecipe;
 import cpw.mods.fml.common.registry.GameRegistry;
-import dark.core.common.RecipeLoader;
+import dark.core.prefab.RecipeLoader;
 import dark.empire.weapons.guns.ItemClip;
 import dark.empire.weapons.guns.ItemProjectileWeapon;
 import dark.empire.weapons.guns.ItemWeaponUpgrade;
