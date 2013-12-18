@@ -6,6 +6,9 @@ import java.util.Arrays;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.common.MinecraftForge;
 import universalelectricity.prefab.TranslationHelper;
+
+import com.dark.DarkCore;
+
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -106,7 +109,7 @@ public class EmpireVillage extends ModPrefab
         meta.description = "Village package for Empire Engine builds on the NPC framework of the engine allowing NPC to create, and function in small communities like villages.";
         meta.url = "http://www.builtbroken.com/empire-engine/";
 
-        meta.logoFile = TEXTURE_DIRECTORY + "GP_Banner.png";
+        meta.logoFile = DarkCore.TEXTURE_DIRECTORY + "GP_Banner.png";
         meta.version = VERSION;
         meta.authorList = Arrays.asList(new String[] { "DarkGuardsman aka DarkCow" });
         meta.credits = "Please see the website.";

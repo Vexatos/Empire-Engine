@@ -7,6 +7,9 @@ import net.minecraftforge.client.IItemRenderer;
 import org.lwjgl.opengl.GL11;
 
 import universalelectricity.core.item.IItemElectric;
+
+import com.dark.DarkCore;
+
 import cpw.mods.fml.client.FMLClientHandler;
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
@@ -25,13 +28,13 @@ public class RenderItemGun implements IItemRenderer
     private static final ModelShotGun SHOTGUN = new ModelShotGun();
     private static final ModelDBShotGun DBSHOTGUN = new ModelDBShotGun();
     private static final ModelLaserRifle LASERRIFLE = new ModelLaserRifle();
-    private static final ResourceLocation TEXTURE_HANDGUN = new ResourceLocation(EmpireWeapons.instance.DOMAIN, EmpireWeapons.MODEL_DIRECTORY + "guns/HandGun.png");
-    private static final ResourceLocation TEXTURE_SHOTGUN = new ResourceLocation(EmpireWeapons.instance.DOMAIN, EmpireWeapons.MODEL_DIRECTORY + "guns/PumpShotgun.png");
-    private static final ResourceLocation TEXTURE_LASER = new ResourceLocation(EmpireWeapons.instance.DOMAIN, EmpireWeapons.MODEL_DIRECTORY + "guns/LaserRifle.png");
-    private static final ResourceLocation TEXTURE_LASER1 = new ResourceLocation(EmpireWeapons.instance.DOMAIN, EmpireWeapons.MODEL_DIRECTORY + "guns/LaserRifle1.png");
-    private static final ResourceLocation TEXTURE_LASER2 = new ResourceLocation(EmpireWeapons.instance.DOMAIN, EmpireWeapons.MODEL_DIRECTORY + "guns/LaserRifle2.png");
-    private static final ResourceLocation TEXTURE_LASER3 = new ResourceLocation(EmpireWeapons.instance.DOMAIN, EmpireWeapons.MODEL_DIRECTORY + "guns/LaserRifle3.png");
-    private static final ResourceLocation TEXTURE_NONE = new ResourceLocation(EmpireWeapons.instance.DOMAIN, EmpireWeapons.MODEL_DIRECTORY + "guns/grey.png");
+    private static final ResourceLocation TEXTURE_HANDGUN = new ResourceLocation(EmpireWeapons.instance.DOMAIN, DarkCore.MODEL_DIRECTORY + "guns/HandGun.png");
+    private static final ResourceLocation TEXTURE_SHOTGUN = new ResourceLocation(EmpireWeapons.instance.DOMAIN, DarkCore.MODEL_DIRECTORY + "guns/PumpShotgun.png");
+    private static final ResourceLocation TEXTURE_LASER = new ResourceLocation(EmpireWeapons.instance.DOMAIN, DarkCore.MODEL_DIRECTORY + "guns/LaserRifle.png");
+    private static final ResourceLocation TEXTURE_LASER1 = new ResourceLocation(EmpireWeapons.instance.DOMAIN, DarkCore.MODEL_DIRECTORY + "guns/LaserRifle1.png");
+    private static final ResourceLocation TEXTURE_LASER2 = new ResourceLocation(EmpireWeapons.instance.DOMAIN, DarkCore.MODEL_DIRECTORY + "guns/LaserRifle2.png");
+    private static final ResourceLocation TEXTURE_LASER3 = new ResourceLocation(EmpireWeapons.instance.DOMAIN, DarkCore.MODEL_DIRECTORY + "guns/LaserRifle3.png");
+    private static final ResourceLocation TEXTURE_NONE = new ResourceLocation(EmpireWeapons.instance.DOMAIN, DarkCore.MODEL_DIRECTORY + "guns/grey.png");
 
     @Override
     public boolean handleRenderType(ItemStack item, ItemRenderType type)

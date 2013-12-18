@@ -3,12 +3,14 @@ package dark.empire.weapons;
 import java.io.File;
 import java.util.Arrays;
 
-import com.dark.ModObjectRegistry;
-
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.prefab.TranslationHelper;
+
+import com.dark.DarkCore;
+import com.dark.ModObjectRegistry;
+
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -120,7 +122,7 @@ public class EmpireWeapons extends ModPrefab
         meta.description = "Empire Engine is the begining of a new world in the age of NPC empire management";
         meta.url = "http://www.builtbroken.com/empire-engine/";
 
-        meta.logoFile = TEXTURE_DIRECTORY + "GP_Banner.png";
+        meta.logoFile = DarkCore.TEXTURE_DIRECTORY + "GP_Banner.png";
         meta.version = VERSION;
         meta.authorList = Arrays.asList(new String[] { "DarkGuardsman aka DarkCow" });
         meta.credits = "Please see the website.";

@@ -5,6 +5,9 @@ import java.util.Arrays;
 
 import net.minecraftforge.common.Configuration;
 import universalelectricity.prefab.TranslationHelper;
+
+import com.dark.DarkCore;
+
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -98,7 +101,7 @@ public class EmpireEngine extends ModPrefab
         meta.description = "Empire Engine is the begining of a new world in the age of NPC empire management";
         meta.url = "http://www.builtbroken.com/empire-engine/";
 
-        meta.logoFile = TEXTURE_DIRECTORY + "GP_Banner.png";
+        meta.logoFile = DarkCore.TEXTURE_DIRECTORY + "GP_Banner.png";
         meta.version = VERSION;
         meta.authorList = Arrays.asList(new String[] { "DarkGuardsman aka DarkCow" });
         meta.credits = "Please see the website.";

@@ -6,17 +6,19 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 import net.minecraft.world.World;
+
+import com.dark.DarkCore;
+
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.prefab.ItemBasic;
-import dark.core.prefab.ModPrefab;
 import dark.empire.weapons.EmpireWeapons;
 
 public class ItemWeaponUpgrade extends ItemBasic
 {
     public ItemWeaponUpgrade()
     {
-        super(ModPrefab.getNextID(), "EWWeaponUpgrade", EmpireWeapons.CONFIGURATION);
+        super(DarkCore.getNextItemId(), "EWWeaponUpgrade", EmpireWeapons.CONFIGURATION);
         this.setMaxStackSize(1);
         this.setCreativeTab(CreativeTabs.tabCombat);
     }

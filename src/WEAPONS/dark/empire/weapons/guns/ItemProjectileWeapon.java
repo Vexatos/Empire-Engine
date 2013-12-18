@@ -22,13 +22,13 @@ import universalelectricity.core.item.IItemElectric;
 import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.Pair;
+import com.dark.DarkCore;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
 import dark.core.helpers.ItemWorldHelper;
 import dark.core.helpers.RayTraceHelper;
 import dark.core.prefab.ItemBasic;
-import dark.core.prefab.ModPrefab;
 import dark.empire.api.weapons.AmmoType;
 import dark.empire.api.weapons.IBullet;
 import dark.empire.api.weapons.IItemBullet;
@@ -37,13 +37,13 @@ import dark.machines.DarkMain;
 import dark.machines.client.Effects;
 
 /** Basic Projectile weapon class that stores all the attributes of the weapon as NBT
- * 
+ *
  * @author DarkGaurdsman */
 public class ItemProjectileWeapon extends ItemBasic implements IItemElectric
 {
     public ItemProjectileWeapon()
     {
-        super(ModPrefab.getNextID(), "EWProjectilWeapon", EmpireWeapons.CONFIGURATION);
+        super(DarkCore.getNextItemId(), "EWProjectilWeapon", EmpireWeapons.CONFIGURATION);
         this.setMaxStackSize(1);
         this.setCreativeTab(CreativeTabs.tabCombat);
         this.setNoRepair();

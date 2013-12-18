@@ -3,18 +3,20 @@ package dark.empire.weapons.block;
 import net.minecraft.block.material.Material;
 import universalelectricity.core.UniversalElectricity;
 import universalelectricity.prefab.block.BlockTile;
-import dark.core.prefab.ModPrefab;
+
+import com.dark.DarkCore;
+
 import dark.empire.weapons.EmpireWeapons;
 
 /** Block designed to store weapons on such as guns, and swords
- * 
+ *
  * @author DarkGuardsman */
 public class BlockWeaponRack extends BlockTile
 {
 
     public BlockWeaponRack(int id, Material material)
     {
-        super(EmpireWeapons.CONFIGURATION.getBlock("EWWeaponRack", ModPrefab.getNextID()).getInt(), UniversalElectricity.machine);
+        super(EmpireWeapons.CONFIGURATION.getBlock("EWWeaponRack", DarkCore.getNextID()).getInt(), UniversalElectricity.machine);
         this.setUnlocalizedName("EWWeaponRack");
     }
 

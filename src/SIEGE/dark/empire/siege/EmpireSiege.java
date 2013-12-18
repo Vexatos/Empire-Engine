@@ -5,6 +5,9 @@ import java.util.Arrays;
 
 import net.minecraftforge.common.Configuration;
 import universalelectricity.prefab.TranslationHelper;
+
+import com.dark.DarkCore;
+
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
 import cpw.mods.fml.common.Mod;
@@ -98,7 +101,7 @@ public class EmpireSiege extends ModPrefab
         meta.description = "Siege package for Empire Engine provides a wide range of ways to destroy thy enemy within their safe walls.";
         meta.url = "http://www.builtbroken.com/empire-engine/";
 
-        meta.logoFile = TEXTURE_DIRECTORY + "GP_Banner.png";
+        meta.logoFile = DarkCore.TEXTURE_DIRECTORY + "GP_Banner.png";
         meta.version = VERSION;
         meta.authorList = Arrays.asList(new String[] { "DarkGuardsman aka DarkCow" });
         meta.credits = "Please see the website.";
