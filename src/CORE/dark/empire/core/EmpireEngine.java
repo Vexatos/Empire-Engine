@@ -7,6 +7,7 @@ import net.minecraftforge.common.Configuration;
 import universalelectricity.prefab.TranslationHelper;
 
 import com.dark.DarkCore;
+import com.dark.network.PacketHandler;
 
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
@@ -20,7 +21,6 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
-import dark.core.network.PacketHandler;
 import dark.core.prefab.ModPrefab;
 
 @Mod(modid = EmpireEngine.MOD_ID, name = EmpireEngine.MOD_NAME, version = EmpireEngine.VERSION, dependencies = "after:DarkCore", useMetadata = true)

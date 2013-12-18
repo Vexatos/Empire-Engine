@@ -8,6 +8,7 @@ import net.minecraftforge.common.MinecraftForge;
 import universalelectricity.prefab.TranslationHelper;
 
 import com.dark.DarkCore;
+import com.dark.network.PacketHandler;
 
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
@@ -23,7 +24,6 @@ import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
 import cpw.mods.fml.common.registry.TickRegistry;
 import cpw.mods.fml.relauncher.Side;
-import dark.core.network.PacketHandler;
 import dark.core.prefab.ModPrefab;
 import dark.empire.village.village.VillageManager;
 

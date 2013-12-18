@@ -23,12 +23,12 @@ import universalelectricity.core.vector.Vector3;
 
 import com.builtbroken.common.Pair;
 import com.dark.DarkCore;
+import com.dark.helpers.ItemWorldHelper;
+import com.dark.helpers.RayTraceHelper;
+import com.dark.prefab.ItemBasic;
 
 import cpw.mods.fml.relauncher.Side;
 import cpw.mods.fml.relauncher.SideOnly;
-import dark.core.helpers.ItemWorldHelper;
-import dark.core.helpers.RayTraceHelper;
-import dark.core.prefab.ItemBasic;
 import dark.empire.api.weapons.AmmoType;
 import dark.empire.api.weapons.IBullet;
 import dark.empire.api.weapons.IItemBullet;

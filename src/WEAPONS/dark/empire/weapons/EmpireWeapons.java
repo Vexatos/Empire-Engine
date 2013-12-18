@@ -9,7 +9,8 @@ import net.minecraftforge.oredict.OreDictionary;
 import universalelectricity.prefab.TranslationHelper;
 
 import com.dark.DarkCore;
-import com.dark.ModObjectRegistry;
+import com.dark.CoreRegistry;
+import com.dark.network.PacketHandler;
 
 import cpw.mods.fml.common.FMLLog;
 import cpw.mods.fml.common.Loader;
@@ -23,7 +24,6 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
-import dark.core.network.PacketHandler;
 import dark.core.prefab.ModPrefab;
 import dark.empire.weapons.guns.ItemBullet;
 import dark.empire.weapons.guns.ItemBullet.BulletData;
@@ -135,8 +135,8 @@ public class EmpireWeapons extends ModPrefab
     {
         EmpireWeapons.CONFIGURATION.load();
         EWRecipeLoader.instance();
-        EWRecipeLoader.itemGun = ModObjectRegistry.createNewItem("EWItemGun", MOD_ID, ItemProjectileWeapon.class, true);
-        EWRecipeLoader.itemBullet = ModObjectRegistry.createNewItem("EWItemBullet", MOD_ID, ItemBullet.class, true);
+        EWRecipeLoader.itemGun = CoreRegistry.createNewItem("EWItemGun", MOD_ID, ItemProjectileWeapon.class, true);
+        EWRecipeLoader.itemBullet = CoreRegistry.createNewItem("EWItemBullet", MOD_ID, ItemBullet.class, true);
         EmpireWeapons.CONFIGURATION.save();
 
     }

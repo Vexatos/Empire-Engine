@@ -5,8 +5,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.Icon;
 
 import com.dark.DarkCore;
+import com.dark.prefab.ItemBasic;
 
-import dark.core.prefab.ItemBasic;
 import dark.empire.weapons.EmpireWeapons;
 
 public class ItemClip extends ItemBasic
