@@ -1,6 +1,7 @@
 package dark.empire.api.village;
 
-import dark.api.save.IVirtualObject;
+import com.dark.save.IVirtualObject;
+
 import dark.empire.api.IEmpireNode;
 
 /** Just used with the interfaces so the actual classes for this don't have to be included

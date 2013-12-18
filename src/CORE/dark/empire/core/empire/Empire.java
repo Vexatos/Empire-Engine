@@ -6,13 +6,15 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+import com.dark.access.AccessGroup;
+import com.dark.access.AccessUser;
+import com.dark.access.GroupRegistry;
+import com.dark.access.ISpecialAccess;
+import com.dark.save.IVirtualObject;
+
+
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import dark.api.access.AccessGroup;
-import dark.api.access.AccessUser;
-import dark.api.access.GroupRegistry;
-import dark.api.access.ISpecialAccess;
-import dark.api.save.IVirtualObject;
 import dark.empire.api.IEmpireNode;
 
 public class Empire implements ISpecialAccess, Cloneable, IVirtualObject

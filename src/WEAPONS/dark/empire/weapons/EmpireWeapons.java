@@ -3,6 +3,8 @@ package dark.empire.weapons;
 import java.io.File;
 import java.util.Arrays;
 
+import com.dark.ModObjectRegistry;
+
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.Configuration;
 import net.minecraftforge.oredict.OreDictionary;
@@ -19,7 +21,6 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.network.NetworkMod;
-import dark.core.ModObjectRegistry;
 import dark.core.network.PacketHandler;
 import dark.core.prefab.ModPrefab;
 import dark.empire.weapons.guns.ItemBullet;
